@@ -1,4 +1,4 @@
-(lang dune 3.7)
+(lang dune 3.6)
 (name pacml)
 (sections (lib .) (libexec .) (bin ../../bin))
 (files
@@ -38,24 +38,15 @@
  (modes byte native)
  (modules
   (wrapped
-   (group
-    (alias
-     (obj_name game)
-     (visibility public)
-     (kind alias)
-     (source (path Game) (impl (path game.ml-gen))))
+   (main_module_name Game)
+   (modules
+    ((name Command) (obj_name game__Command) (visibility public) (impl))
+    ((name Logic) (obj_name game__Logic) (visibility public) (impl))
+    ((name State) (obj_name game__State) (visibility public) (impl)))
+   (alias_module
     (name Game)
-    (modules
-     (module
-      (obj_name game__Command)
-      (visibility public)
-      (source (path Command) (impl (path Command.ml))))
-     (module
-      (obj_name game__Logic)
-      (visibility public)
-      (source (path Logic) (impl (path Logic.ml))))
-     (module
-      (obj_name game__State)
-      (visibility public)
-      (source (path State) (impl (path State.ml))))))
+    (obj_name game)
+    (visibility public)
+    (kind alias)
+    (impl))
    (wrapped true))))
