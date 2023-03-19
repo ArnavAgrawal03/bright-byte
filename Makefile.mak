@@ -12,10 +12,10 @@ utop:
 	OCAMLRUNPARAM=b dune utop src
 
 test:
-	OCAMLRUNPARAM=b dune exec test/main.exe
+	$(OCAMLBUILD) -tag 'debug' $(TEST) && .test/main.exe -runner sequential
 
 play:
-	OCAMLRUNPARAM=b dune exec bin/main.exe
+	$(OCAMLBUILD) $(MAIN) && ./$(MAIN)
 
 check:
 	@bash check.sh
