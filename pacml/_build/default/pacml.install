@@ -1,0 +1,8 @@
+lib: [
+  "_build/install/default/lib/pacml/META"
+  "_build/install/default/lib/pacml/dune-package"
+  "_build/install/default/lib/pacml/opam"
+]
+bin: [
+  "_build/install/default/bin/pacml"
+]
