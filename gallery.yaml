@@ -1,0 +1,27 @@
+---
+# Members of your group.
+group:
+  - name: Arnav Agrawal
+    netid: aa779
+  - name: Tasmin K. Sangha
+    netid: tks39
+  - name: Tanay Punjabi
+    netid: tp275
+# Your PM.
+pm:
+  name: Anoushka Kabra
+  netid: ark258
+# Set to false if you don't want your gallery entry to be public.
+publish: false
+# Pithy title
+title: "Terminal-based Pacman Game written in Ocaml"
+# OK if this is a Cornell Github link, but public gallery viewers won't be able to see it.
+git-repo: "https://github.com/ArnavAgrawal03/bright-byte"
+# If you have no demo screencast, replace the url string with an empty string ""
+demo-video-url: ""
+# Write a short, attention-grabbing description of your project.
+desc: >
+  "Step into the maze of nostalgia with this thrilling terminal-based pacman game
+  written in Ocaml. You'll navigate through the twists and turns of the maze while
+  avoiding the pesky ghosts. Will you be able to collect all the pellets and beat 
+  your high score? Play now and find out!"
