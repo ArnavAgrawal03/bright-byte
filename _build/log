@@ -1,0 +1,6 @@
+# dune init project pacml
+# OCAMLPARAM: unset
+# Shared cache: disabled
+# Workspace root: "/Users/arnav/Desktop/Spring
+# 2023/cs3110/final-project/bright-byte"
+# Auto-detected concurrency: 8
