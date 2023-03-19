@@ -7,5 +7,3 @@
 - Tanay Punjabi (tp275)
 
 - Tasmin Sangha (tks39)
-
-Checking if I'm allowed to make edits.
