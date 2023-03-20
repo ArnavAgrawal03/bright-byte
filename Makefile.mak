@@ -15,7 +15,7 @@ test:
 	$(OCAMLBUILD) -tag 'debug' $(TEST) && .test/main.exe -runner sequential
 
 play:
-	$(OCAMLBUILD) $(MAIN) && ./$(MAIN)
+	OCAMLRUNPARAM=b dune exec bin/main.exe
 
 check:
 	@bash check.sh
