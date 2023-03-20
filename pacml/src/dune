@@ -1,4 +1,4 @@
 (library
  (name game)
  (public_name pacml)
- (libraries ANSITerminal csv))
+ (libraries ANSITerminal csv unix))
