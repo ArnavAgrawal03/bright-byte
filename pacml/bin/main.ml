@@ -29,8 +29,9 @@ let rec print_board (b: string list list) = match b with
 let play_game g :unit = 
   print_board (board g);
   match read_line () |> parse with
-  _ -> ANSITerminal.print_string [ANSITerminal.green] "Printed board correctly! "
-
+  | Move _ -> print_string "Moving pacman"
+  | Pause -> print_string "Game paused"
+  | Quit -> exit 0
 let start_game filename : unit = let file = get_file filename in 
   match file with
   | A g -> play_game (init_state g)

@@ -3,8 +3,6 @@ type object_phrase = string list
 type dir = Up | Left | Down | Right
 
 type command = 
-| Name of object_phrase
-| Level of int
 | Move of dir
 | Pause
 | Quit
@@ -21,6 +19,4 @@ let parse str =
   | ["a"] | ["A"] -> Move Left
   | ["s"] | ["S"] -> Move Down
   | ["d"] | ["D"] -> Move Right
-  | "Name" :: tl -> Name tl
-  | "Level" :: [x] -> Level (x|> int_of_string)
   | _ -> raise Malformed
