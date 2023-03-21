@@ -19,7 +19,8 @@ let get_file f =
 let rec join_list = function
   | [] -> ""
   | [ s ] -> s
-  | s :: tl -> s ^ " " ^ join_list tl
+  | s :: tl ->
+      if s <> "" then s ^ " " ^ join_list tl else s ^ "  " ^ join_list tl
 
 (** [single_char] changes the terminal settings to allow parsing of a single
     character. *)
