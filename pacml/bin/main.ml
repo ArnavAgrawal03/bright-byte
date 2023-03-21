@@ -21,11 +21,11 @@ let rec join_list = function
   | [ s ] -> s
   | s :: tl -> s ^ " " ^ join_list tl
 
-(** [move_command] changes the terminal settings to allow parsing of a single
+(** [single_char] changes the terminal settings to allow parsing of a single
     character. *)
-let move_command () =
-  Unix.tcsetattr Unix.stdin TCSANOW
-    { (Unix.tcgetattr Unix.stdin) with c_icanon = false }
+
+(*let single_char () = Unix.tcsetattr Unix.stdin TCSANOW { (Unix.tcgetattr
+  Unix.stdin) with c_icanon = false }*)
 
 (** [print_board] prints the current board on the terminal*)
 let rec print_board (b : string list list) =
