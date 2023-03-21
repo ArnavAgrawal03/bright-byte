@@ -1,5 +1,3 @@
-type object_phrase = string list
-
 type dir = Up | Left | Down | Right
 
 type command = 
