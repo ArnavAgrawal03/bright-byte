@@ -13,22 +13,23 @@ let get_file f =
   try A (Csv.load f)
   with _ -> B ("There is no file with path: " ^ f)
   
-(*let rec join_list = function
+let rec join_list = function
   | [] -> ""
   | [ s ] -> s
   | s :: tl -> s ^ " " ^ join_list tl
- *)
-let rec print_line = function
+
+(*let rec print_line = function
 | [] -> print_string ""
 | hd :: tl -> print_string hd; print_line tl
+*)
 
 let rec print_board (b: string list list) = match b with
 | [] -> print_string "\n"
-| hd :: tl -> print_line (hd @ ["\n"]); print_board tl
+| hd :: tl -> print_string (join_list hd); print_string "\n"; print_board tl
 let play_game g :unit = 
   print_board (board g);
   match read_line () |> parse with
-  _ -> print_string "Printed board correctly"
+  _ -> ANSITerminal.print_string [ANSITerminal.green] "Printed board correctly! "
 
 let start_game filename : unit = let file = get_file filename in 
   match file with
