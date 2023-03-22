@@ -3,7 +3,7 @@
 install:
 	opam install csv
 
-dune:
+build:
 	dune build
 
 code:
