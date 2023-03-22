@@ -5,6 +5,7 @@ open Command
 open State
 
 let data_dir_prefix = "data" ^ Filename.dir_sep
+let clear () = Sys.command "clear"
 
 type t =
   | A of Csv.t
@@ -37,12 +38,19 @@ let rec print_board (b : string list list) =
       print_string "\n";
       print_board tl
 
+let move = function
+  | Up -> print_string "Moving up"
+  | Left -> print_string "Moving left"
+  | Right -> print_string "Moving right"
+  | Down -> print_string "Moving down"
+
 (**[play_game g] prints out the board g and parses parses through the user's
    command*)
 let play_game g : unit =
-  print_board (board g);
+  let _ = clear () in
+  print_board (Array.to_list (Array.map Array.to_list (board g)));
   match read_line () |> parse with
-  | Move _ -> print_string "Moving pacman"
+  | Move m -> move m
   | Pause -> print_string "Game paused"
   | Quit -> exit 0
 
