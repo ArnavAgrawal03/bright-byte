@@ -1,6 +1,9 @@
 .PHONY: test check
 
-build:
+install:
+	opam install csv
+
+dune:
 	dune build
 
 code:
