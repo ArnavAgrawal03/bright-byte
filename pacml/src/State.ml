@@ -19,6 +19,4 @@ let current (x : t) : int * int = x.current
 let lives (x : t) : int = x.lives
 let cherries (x : t) : (int * int) list = x.cherries
 let ghosts (x : t) : (int * int) list = x.ghosts
-
-let board (x : t) : string list list =
-  Array.to_list (Array.map Array.to_list x.board)
+let board (x : t) : string array array = x.board

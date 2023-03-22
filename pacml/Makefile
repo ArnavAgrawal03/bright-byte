@@ -24,8 +24,7 @@ finalcheck:
 	@bash check.sh final
 
 zip:
-	rm -f adventure.zip
-	zip -r adventure.zip . -x@exclude.lst
+	zip -r pacman.zip .
 
 clean:
 	dune clean
