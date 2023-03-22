@@ -36,7 +36,7 @@ let rec print_line = function
       ANSITerminal.print_string [ ANSITerminal.blue ] "# ";
       print_line tl
   | "O" :: tl ->
-      ANSITerminal.print_string [ ANSITerminal.green ] "O ";
+      ANSITerminal.print_string [ ANSITerminal.green ] "▫ ";
       print_line tl
   | "R" :: tl ->
       ANSITerminal.print_string [ ANSITerminal.red ] "R ";
