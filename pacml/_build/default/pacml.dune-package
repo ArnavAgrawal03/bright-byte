@@ -1,0 +1,62 @@
+(lang dune 3.6)
+(name pacml)
+(sections (lib .) (libexec .) (bin ../../bin))
+(files
+ (lib
+  (META
+   State.ml
+   command.ml
+   command.mli
+   dune-package
+   game.a
+   game.cma
+   game.cmi
+   game.cmt
+   game.cmx
+   game.cmxa
+   game.ml
+   game__Command.cmi
+   game__Command.cmt
+   game__Command.cmti
+   game__Command.cmx
+   game__Logic.cmi
+   game__Logic.cmt
+   game__Logic.cmti
+   game__Logic.cmx
+   game__State.cmi
+   game__State.cmt
+   game__State.cmti
+   game__State.cmx
+   logic.ml
+   logic.mli
+   opam
+   state.mli))
+ (libexec (game.cmxs))
+ (bin (pacml)))
+(library
+ (name pacml)
+ (kind normal)
+ (archives (byte game.cma) (native game.cmxa))
+ (plugins (byte game.cma) (native game.cmxs))
+ (native_archives game.a)
+ (requires ANSITerminal csv unix)
+ (main_module_name Game)
+ (modes byte native)
+ (modules
+  (wrapped
+   (main_module_name Game)
+   (modules
+    ((name Command)
+     (obj_name game__Command)
+     (visibility public)
+     (impl)
+     (intf))
+    ((name Logic) (obj_name game__Logic) (visibility public) (impl) (intf))
+    ((name State) (obj_name game__State) (visibility public) (impl) (intf)))
+   (alias_module
+    (name Game)
+    (obj_name game)
+    (visibility public)
+    (kind alias)
+    (impl))
+   (wrapped true))))
