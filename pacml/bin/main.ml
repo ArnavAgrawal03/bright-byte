@@ -39,19 +39,19 @@ let rec print_line = function
       ANSITerminal.print_string [ ANSITerminal.green ] "▫ ";
       print_line tl
   | "R" :: tl ->
-      ANSITerminal.print_string [ ANSITerminal.red ] "R ";
+      ANSITerminal.print_string [ ANSITerminal.red ] "👻";
       print_line tl
   | "B" :: tl ->
-      ANSITerminal.print_string [ ANSITerminal.cyan ] "B ";
+      ANSITerminal.print_string [ ANSITerminal.cyan ] "👻";
       print_line tl
   | "P" :: tl ->
-      ANSITerminal.print_string [ ANSITerminal.magenta ] "P ";
+      ANSITerminal.print_string [ ANSITerminal.magenta ] "👻";
       print_line tl
   | "Y" :: tl ->
-      ANSITerminal.print_string [ ANSITerminal.white ] "W ";
+      ANSITerminal.print_string [ ANSITerminal.white ] "👻";
       print_line tl
   | "C" :: tl ->
-      ANSITerminal.print_string [ ANSITerminal.yellow ] "C ";
+      ANSITerminal.print_string [ ANSITerminal.yellow ] "ᗧ ";
       print_line tl
   | "" :: tl ->
       print_string "  ";
