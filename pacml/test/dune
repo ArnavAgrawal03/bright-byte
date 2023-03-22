@@ -1,2 +1,3 @@
-(test
- (name pacml))
+(executable
+ (name pacml)
+ (libraries ounit2))
