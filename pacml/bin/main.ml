@@ -67,19 +67,27 @@ let rec print_board (b : string list list) =
       (*print_string "\n";*)
       print_board tl
 
-let move = function
-  | Up -> print_string "Moving up"
-  | Left -> print_string "Moving left"
-  | Right -> print_string "Moving right"
-  | Down -> print_string "Moving down"
+let move g = function
+  | Up ->
+      print_string "Moving up! \n";
+      g
+  | Left ->
+      print_string "Moving left! \n";
+      g
+  | Right ->
+      print_string "Moving right! \n";
+      g
+  | Down ->
+      print_string "Moving down! \n";
+      g
 
 (**[play_game g] prints out the board g and parses parses through the user's
    command*)
-let play_game g : unit =
+let rec play_game g : unit =
   let _ = clear () in
   print_board (Array.to_list (Array.map Array.to_list (board g)));
   match read_line () |> parse with
-  | Move m -> move m
+  | Move m -> play_game (move g m)
   | Pause -> print_string "Game paused"
   | Quit -> exit 0
 
@@ -93,6 +101,7 @@ let start_game filename : unit =
 
 (** [main ()] prompts for the game to play, then starts it. *)
 let main () =
+  let _ = clear () in
   ANSITerminal.print_string [ ANSITerminal.red ] "\n\nWelcome to Pacman!\n";
   ANSITerminal.print_string [ ANSITerminal.blue ]
     "Please choose the difficulty (easy, medium, hard): \n";
