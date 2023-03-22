@@ -21,7 +21,7 @@ let rec join_list = function
   | [] -> ""
   | [ s ] -> s
   | s :: tl ->
-      if s <> "" then s ^ " " ^ join_list tl else s ^ "  " ^ join_list tl
+      if s <> "" then s ^ " " ^ join_list tl else s ^ " " ^ join_list tl
 
 (** [single_char] changes the terminal settings to allow parsing of a single
     character. *)
@@ -29,13 +29,42 @@ let rec join_list = function
 (*let single_char () = Unix.tcsetattr Unix.stdin TCSANOW { (Unix.tcgetattr
   Unix.stdin) with c_icanon = false }*)
 
+let rec print_line = function
+  | [] -> print_string " "
+  | [ "/n" ] -> print_string "\n"
+  | "#" :: tl ->
+      ANSITerminal.print_string [ ANSITerminal.blue ] "# ";
+      print_line tl
+  | "O" :: tl ->
+      ANSITerminal.print_string [ ANSITerminal.green ] "O ";
+      print_line tl
+  | "R" :: tl ->
+      ANSITerminal.print_string [ ANSITerminal.red ] "R ";
+      print_line tl
+  | "B" :: tl ->
+      ANSITerminal.print_string [ ANSITerminal.cyan ] "B ";
+      print_line tl
+  | "P" :: tl ->
+      ANSITerminal.print_string [ ANSITerminal.magenta ] "P ";
+      print_line tl
+  | "Y" :: tl ->
+      ANSITerminal.print_string [ ANSITerminal.white ] "W ";
+      print_line tl
+  | "C" :: tl ->
+      ANSITerminal.print_string [ ANSITerminal.yellow ] "C ";
+      print_line tl
+  | "" :: tl ->
+      print_string "  ";
+      print_line tl
+  | x -> print_string (join_list x)
+
 (** [print_board] prints the current board on the terminal*)
 let rec print_board (b : string list list) =
   match b with
   | [] -> print_string "\n"
   | hd :: tl ->
-      print_string (join_list hd);
-      print_string "\n";
+      print_line hd;
+      (*print_string "\n";*)
       print_board tl
 
 let move = function
