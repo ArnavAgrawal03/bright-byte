@@ -14,6 +14,7 @@ type command =
       (** The type [command] represents a player command that is decomposed into
           a verb and possibly a direction. Invariant: [Move] must have a
           non-empty direction*)
+  | Error of string
 
 exception Empty
 (** raised when an empty command is parsed*)

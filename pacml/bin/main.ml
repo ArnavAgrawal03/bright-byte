@@ -88,8 +88,14 @@ let rec play_game g : unit =
   print_board (Array.to_list (Array.map Array.to_list (board g)));
   match read_line () |> parse with
   | Move m -> play_game (move g m)
-  | Pause -> print_string "Game paused"
+  | Pause ->
+      ANSITerminal.print_string [ ANSITerminal.green ]
+        "Game paused. Press p to resume. Press q to quit. \n";
+      play_game g
   | Quit -> exit 0
+  | Error a ->
+      ANSITerminal.print_string [ ANSITerminal.red ] (a ^ "!\n");
+      play_game g
 
 (**[start_game filename] retrives the file and starts the game in the initial
    state of g *)
