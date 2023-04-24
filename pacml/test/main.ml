@@ -1,5 +1,8 @@
 open OUnit2
-(* open Game open Command *)
+open Game
+open Command
+open Logic
+open State
 
 (********************************************************************
    Here are some helper functions for your testing of set-like lists.
@@ -34,6 +37,13 @@ let pp_list pp_elt lst =
     loop 0 "" lst
   in
   "[" ^ pp_elts lst ^ "]"
+
 (********************************************************************
    End helper functions.
  ********************************************************************)
+let dir_stiring d =
+  match d with
+  | Up -> "up"
+  | Left -> "left"
+  | Down -> "down"
+  | Right -> "right"
