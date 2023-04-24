@@ -1,3 +1,3 @@
 (executable
- (name pacml)
+ (name main)
  (libraries ounit2))
