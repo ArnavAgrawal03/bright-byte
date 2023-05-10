@@ -1,10 +1,38 @@
+open ANSITerminal
+
+type current_game =
+  | Won
+  | Lost
+  | Play
+
+type difficulty =
+  | Easy
+  | Medium
+  | Hard
+
 type t = {
   current : int * int;
   lives : int;
   cherries : (int * int) list;
   ghosts : (int * int) list;
   board : string array array;
+  total_pac_dots : int;
+  score : int;
+  paused : bool;
+  quitting_game : bool;
+  game_state : current_game;
 }
+
+let current (x : t) : int * int = x.current
+let lives (x : t) : int = x.lives
+let cherries (x : t) : (int * int) list = x.cherries
+let ghosts (x : t) : (int * int) list = x.ghosts
+let board (x : t) : string array array = x.board
+let total_pac_dots (x : t) : int = x.total_pac_dots
+let score (x : t) : int = x.score
+let paused (x : t) : bool = x.paused
+let quitting_game (x : t) : bool = x.quitting_game
+let game_state (x : t) : current_game = x.game_state
 
 let init_state (csv : Csv.t) : t =
   {
@@ -15,8 +43,11 @@ let init_state (csv : Csv.t) : t =
     board = Csv.to_array csv;
   }
 
-let current (x : t) : int * int = x.current
-let lives (x : t) : int = x.lives
-let cherries (x : t) : (int * int) list = x.cherries
-let ghosts (x : t) : (int * int) list = x.ghosts
-let board (x : t) : string array array = x.board
+let frames_scat diff =
+  match diff with
+  | Easy -> 50
+  | Medium -> 20
+  | Hard -> 10
+
+let pac_dot_value = 1
+let ghost_value = 100
