@@ -25,6 +25,18 @@ let init pos color dir =
     scatter_frames = 0;
   }
 
-let pos_of t = t.pos
-let color_of t = t.color
-let move t pos = { t with pos }
+(* querying functions*)
+let pos t = t.pos
+let color t = t.color
+let dir t = t.dir
+let active t = t.active
+
+(* transforming functions*)
+let move_aux dx dy pos = (fst pos + dx, snd pos + dy)
+
+let move (g : t) (steps : int) (dir : Command.dir) : t =
+  match dir with
+  | Up -> { g with pos = move_aux 0 (-steps) g.pos }
+  | Down -> { g with pos = move_aux 0 steps g.pos }
+  | Right -> { g with pos = move_aux steps 0 g.pos }
+  | Left -> { g with pos = move_aux (-steps) 0 g.pos }
