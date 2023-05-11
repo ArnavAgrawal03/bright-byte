@@ -25,6 +25,8 @@ let init pos color dir =
     scatter_frames = 0;
   }
 
-let pos_of t = t.pos
-let color_of t = t.color
+let pos t = t.pos
+let color t = t.color
+let dir t = t.dir
+let active t = t.active
 let move t pos = { t with pos }
