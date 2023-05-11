@@ -16,6 +16,6 @@ val pos_of : t -> Board.position
 val color_of : t -> color
 (** [color_of g] is the color of ghost [g]*)
 
-val move : t -> Board.position -> t
-(** [move g p] is a ghost [g'] with same attributes as [g] but with current
-    position [p]*)
+val move : t -> int -> Command.dir -> t
+(** [move g s d] is a ghost [g'] with same attributes as [g] but moved [s]
+    spaces in direction [d]*)
