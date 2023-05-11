@@ -15,5 +15,5 @@ val num_dots_left : t -> int
 val update_empty_dot : position -> t -> t
 val won : t -> bool
 val got_dot : position -> t -> bool
-val move_pos : position -> Command.dir -> t
+val move_pos : position -> Command.dir -> position
 val board_display : t -> t
