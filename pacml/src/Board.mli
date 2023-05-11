@@ -1,7 +1,7 @@
 (** Representation of the board*)
 
 (*The abstract type of the values in the board.*)
-type t
+type t = string array array
 
 (**)
 type position = int * int
