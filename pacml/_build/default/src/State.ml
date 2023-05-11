@@ -42,11 +42,11 @@ let init_state (csv : Csv.t) : t =
     cherries = [ (20, 19); (-20, -19) ];
     ghosts = [ (10, 10); (-3, -9) ];
     board = Csv.to_array csv;
+    total_pac_dots = Board.num_dots_left board;
     score = 0;
     is_paused = false;
     game_state = Play;
     quitting_game = false;
-    total_pac_dots = Board.num_dots_left board;
   }
 
 let frames_scat diff =
