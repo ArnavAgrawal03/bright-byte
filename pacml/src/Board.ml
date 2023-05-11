@@ -25,7 +25,7 @@ let rec num_dots_helper rows : int =
   | [] -> 0
   | row :: left_rows -> num_dots_row row + num_dots_helper left_rows
 
-let rec num_dots_left (t : t) =
+let num_dots_left (t : t) =
   let rows = Array.to_list (Array.map Array.to_list t) in
   num_dots_helper rows
 

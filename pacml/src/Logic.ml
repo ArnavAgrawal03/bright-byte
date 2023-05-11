@@ -29,6 +29,4 @@ let move_pac t board (dir : Command.dir) =
     move_pac_helper t board t_dir
   else try_moving
 
-let make_og_pos t =
-  match t with
-  | { position; dir; og_pos } -> { position = og_pos; dir; og_pos }
+let make_og_pos t = { t with position = t.og_pos }

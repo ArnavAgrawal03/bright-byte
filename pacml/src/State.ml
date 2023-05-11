@@ -35,7 +35,7 @@ let is_paused (x : t) : bool = x.is_paused
 let quitting_game (x : t) : bool = x.quitting_game
 let game_state (x : t) : current_game = x.game_state
 
-let init_state (csv : Csv.t) : t =
+let init_state (csv : Csv.t) =
   {
     current = (0, 0);
     lives = 3;
