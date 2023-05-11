@@ -6,12 +6,12 @@ type t
 (**)
 type position = int * int
 
-val boarder : char
-val pac_dots : char
-val empty : char
+val border : string
+val pac_dots : string
+val empty : string
 val is_border : t -> position -> bool
 val board_array : t -> string array array
-val num_dots_left : t -> int
+val num_dots_left : string array array -> int
 val update_empty_dot : position -> t -> t
 val won : t -> bool
 val got_dot : position -> t -> bool

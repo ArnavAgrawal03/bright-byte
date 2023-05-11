@@ -46,13 +46,13 @@ let init_state (csv : Csv.t) =
     is_paused = false;
     game_state = Play;
     quitting_game = false;
-    total_pac_dots = Board.num_dots_left board;
+    total_pac_dots = Board.num_dots_left (Csv.to_array csv);
   }
 
 let frames_scat diff =
   match diff with
   | Easy -> 50
-  | Medium -> 20
+  | Medium -> 20s
   | Hard -> 10
 
 let pac_dot_value = 1

@@ -58,12 +58,12 @@ let move_pos position (dir : Command.dir) =
 
 let char_display c =
   match c with
-  | 'R' -> 'x'
-  | 'B' -> 'x'
-  | 'Y' -> 'x'
-  | 'P' -> 'x'
-  | 'C' -> 'c'
-  | 'O' -> 'o'
+  | "R" -> "x"
+  | "B" -> "x"
+  | "Y" -> "x"
+  | "P" -> "x"
+  | "C" -> "c"
+  | "O" -> "o"
   | _ -> c
 
 let row_display row = Array.map char_display row
