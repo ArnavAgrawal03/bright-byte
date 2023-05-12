@@ -62,3 +62,10 @@ let frames_scat diff =
 let pac_dot_value = 1
 let ghost_value = 10
 let change_pac dir t = { t with pacman = Logic.move_pac t.pacman t.board dir }
+
+let gather_dots t =
+  {
+    t with
+    score = t.score + pac_dot_value;
+    board = Board.update_empty_dot (Logic.position t.pacman) t.board;
+  }
