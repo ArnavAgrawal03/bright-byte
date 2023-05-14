@@ -246,5 +246,11 @@ let move_unlocked pac board gs g =
   in
   move_best_option directed_options board g (blocked_all board)
 
-let move_in_container pac board gs g exits = 
-  let directions' = List.flatten (List.map )
+let move_locked board g exits =
+  let poss_moves = List.flatten (List.map (move_options g) exits) in
+  let ordered_moves = dequeue (dir g) poss_moves in
+  move_best_option ordered_moves board g (blocked_wall board)
+
+let move_exit board g =
+  let options = move_options g (0, 0) in
+  move_best_option options board g (blocked_non_exit board)
