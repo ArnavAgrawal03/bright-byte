@@ -14,6 +14,10 @@ type t = {
   scatter_frames : int;
 }
 
+let directions =
+  let open Command in
+  [ Up; Down; Left; Right ]
+
 (*-------- Constructor --------*)
 let init pos_a color_a dir_a active_a =
   {
@@ -29,9 +33,6 @@ let init pos_a color_a dir_a active_a =
 let inits arg_list =
   List.map (fun (pos_a, color_a) -> init pos_a color_a Up false) arg_list
 
-(*-------- Querying functions --------*)
-
-(* querying functions*)
 let pos g = g.pos
 let color g = g.color
 let dir g = g.dir
@@ -49,8 +50,6 @@ let scatter_target m c =
   | Blue -> (hor_end, 0)
   | Pink -> (0, ver_end)
   | Yellow -> (hor_end, ver_end)
-
-(*-------- Tranforming functions --------*)
 
 let turn g d = { g with dir = d }
 
@@ -99,17 +98,10 @@ let distance p1 p2 man =
 let distance_man p1 p2 = distance p1 p2 true
 let distance_euc p1 p2 = distance p1 p2 false
 
-let move_one_step p (d : Command.dir) =
-  match d with
-  | Up -> (fst p, snd p - 1)
-  | Down -> (fst p, snd p + 1)
-  | Left -> (fst p - 1, snd p)
-  | Right -> (fst p + 1, snd p)
-
 let rec move_n_steps pos dir = function
   | 0 -> pos
   | steps ->
-      let pos' = move_one_step pos dir in
+      let pos' = Board.move_pos pos dir in
       move_n_steps pos' dir (steps - 1)
 
 let red_target pac = Logic.position pac
@@ -156,3 +148,50 @@ let chase_target g pac gs board =
 let target g pac gs board =
   if is_scatter g then scatter_target board (color g)
   else chase_target g pac gs board
+
+let move_one_step p (d : Command.dir) =
+  let step =
+    match d with
+    | Up -> (0, -1)
+    | Down -> (0, 1)
+    | Left -> (-1, 0)
+    | Right -> (1, 0)
+  in
+  point_sum p step
+
+let randint max_val =
+  (* initialize random environment to ensure a highly random seed*)
+  Random.self_init ();
+  Random.int max_val
+
+(* compare the distance from target of two posible position options*)
+let distance_cmp x y =
+  match Stdlib.compare x y with
+  | 1 -> 1
+  | -1 -> -1
+  | _ ->
+      let choices = [ -1; 1 ] in
+      List.nth choices (randint 2)
+
+(* compare function used for sorting through a list of ghosts*)
+let cmp p1 p2 = distance_cmp (snd p1) (snd p2)
+
+let move_options g target =
+  let position = pos g in
+  let possible_positions = List.map (move_one_step position) directions in
+  let dists_from_target = List.map (distance_man target) possible_positions in
+  let unsorted_options = List.combine possible_positions dists_from_target in
+  List.sort cmp unsorted_options
+
+let step_aux g board dir is_blocked =
+  let arr = Board.board_array board in
+  let length = Array.length board in
+  let breadth = Array.length arr.(1) in
+  let step_target = Board.move_pos (pos g) dir in
+  match is_blocked step_target with
+  | true -> g
+  | false ->
+      let wrap_around a b = (a + b) mod b in
+      let delta = (breadth, length) in
+      let pos' = point_op delta step_target wrap_around in
+      { g with pos = pos'; dir }
