@@ -6,14 +6,16 @@ type color =
 
 type t
 
-(*-------- Constructor --------*)
-val init : Board.position -> color -> Command.dir -> t
+(*-------- Constructors --------*)
+val init : Board.position -> color -> Command.dir -> bool -> t
 (** [init p c d a] is a ghost with position [p], color [c], and direction [d]
     and is active if [a] is true. Scatter is false by default, scatter frames is
     0, starting position and current position are the same*)
 
 val inits : (Board.position * color) list -> t list
-(** [inits l] is a list of ghosts with positions and colors as specified in [l]*)
+(** [inits l] is a list of ghosts with positions and colors as specified in [l].
+    Default direction and active status is [Up] and [false] respectively. Other
+    defaults as in [init]*)
 
 (*-------- Querying functions --------*)
 val pos : t -> Board.position
@@ -61,6 +63,10 @@ val move_target : State.t -> Board.t -> t list -> Board.position list -> t -> t
 val turn : t -> Command.dir -> t
 (** [turn g d] is a ghost [g'] with same attributes as [g] but pointing in
     direction [d]*)
+
+val rev : t -> t
+(** [rev g] is a ghost [g'] with same attributes as [g] but pointing in the
+    reverse direction*)
 
 val move : t -> int -> Command.dir -> t
 (** [move g s d] is a ghost [g'] with same attributes as [g] but moved [s]
