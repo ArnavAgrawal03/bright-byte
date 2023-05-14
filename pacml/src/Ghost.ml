@@ -282,8 +282,9 @@ let move pac board gs exits g =
   else move_all_locked pac board gs g exits
 
 let rec random_directions g board l =
+  let open Command in
   match l with
-  | [] -> Command.Up
+  | [] -> Up
   | (dir, _) :: t ->
       let g' = step_aux g board dir (blocked_wall board) in
       if pos g' <> pos g then dir else random_directions g board t

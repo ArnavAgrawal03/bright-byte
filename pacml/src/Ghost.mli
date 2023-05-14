@@ -55,11 +55,6 @@ val unscatter : t -> t
 (** [unscatter g] is a ghost [g'] with same attributes as [g] but not in scatter
     mode. Requires: [is_scatter g] is [true]*)
 
-val move_target : Logic.t -> Board.t -> t list -> Board.position list -> t -> t
-(** [move_target s b gs ps g] is a ghost [g'] with same attributes as [g] but
-    moved to the target position - taking into account the positions of other
-    movers such as the pacman and other ghosts*)
-
 val turn : t -> Command.dir -> t
 (** [turn g d] is a ghost [g'] with same attributes as [g] but pointing in
     direction [d]*)
@@ -68,6 +63,37 @@ val rev : t -> t
 (** [rev g] is a ghost [g'] with same attributes as [g] but pointing in the
     reverse direction*)
 
-val move : Logic.t -> Board.t -> t list -> int -> Board.position list -> t -> t
+val move : Logic.t -> Board.t -> t list -> Board.position list -> t -> t
 (** [move g s d] is a ghost [g'] with same attributes as [g] but moved [s]
     spaces in direction [d]*)
+
+val start_pos : t -> Board.position
+(** [start_pos g] is the starting position of ghost [g]*)
+
+val reset : t -> t
+(** [reset g] is a ghost [g'] with same attributes as [g] but with current
+    position set to starting position*)
+
+val distance_euc : Board.position -> Board.position -> float
+(** [distance_euc p1 p2] is the euclidean distance between positions [p1] and
+    [p2]*)
+
+val get_blue : t list -> t
+(** [get_blue gs] is the blue ghost in [gs]*)
+
+val get_pink : t list -> t
+(** [get_pink gs] is the pink ghost in [gs]*)
+
+val get_red : t list -> t
+(** [get_red gs] is the red ghost in [gs]*)
+
+val get_yellow : t list -> t
+(** [get_yellow gs] is the yellow ghost in [gs]*)
+
+val init_random : (Board.position * color) list -> Board.t -> t list
+(** [init_random args_lst board] is a list of ghosts initialized with random
+    directions, and specified positions and colors*)
+
+val incr_scatter_frames : t -> t
+(** [incr_scatter_frames g] is a ghost [g'] with same attributes as [g] but
+    scatter_frames incremented by 1*)

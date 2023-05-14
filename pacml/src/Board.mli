@@ -10,6 +10,8 @@ val border : string
 val pac_dots : string
 val empty : string
 val is_border : t -> position -> bool
+val is_container : t -> position -> bool
+val is_container_exit : t -> position -> bool
 val board_array : t -> string array array
 val num_dots_left : string array array -> int
 val update_empty_dot : position -> t -> t

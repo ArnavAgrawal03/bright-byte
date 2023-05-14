@@ -7,12 +7,29 @@ let board_array t = Array.map Array.copy t
 let border = "#"
 let pac_dots = "O"
 let empty = ""
+let container_col = "|"
+let container_row = "-"
+let exit_row = "_"
 
 let is_border (t : t) (position : position) : bool =
   try
     let row = t.(snd position) in
     let cell = row.(fst position) in
     cell = border
+  with Invalid_argument _ -> false
+
+let is_container (t : t) (position : position) : bool =
+  try
+    let row = t.(snd position) in
+    let cell = row.(fst position) in
+    cell = container_col || cell = container_row
+  with Invalid_argument _ -> false
+
+let is_container_exit (t : t) (position : position) : bool =
+  try
+    let row = t.(snd position) in
+    let cell = row.(fst position) in
+    cell = exit_row
   with Invalid_argument _ -> false
 
 let rec num_dots_row row =
