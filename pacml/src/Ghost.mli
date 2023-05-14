@@ -68,6 +68,6 @@ val rev : t -> t
 (** [rev g] is a ghost [g'] with same attributes as [g] but pointing in the
     reverse direction*)
 
-val move : t -> int -> Command.dir -> t
+val move : Logic.t -> Board.t -> t list -> int -> Board.position list -> t -> t
 (** [move g s d] is a ghost [g'] with same attributes as [g] but moved [s]
     spaces in direction [d]*)

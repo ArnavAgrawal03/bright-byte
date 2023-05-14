@@ -254,3 +254,28 @@ let move_locked board g exits =
 let move_exit board g =
   let options = move_options g (0, 0) in
   move_best_option options board g (blocked_non_exit board)
+
+let move_all pac board gs g exits =
+  match
+    (Board.is_container board (pos g), Board.is_container_exit board (pos g))
+  with
+  | true, _ -> move_locked board g exits
+  | _, true -> move_exit board g
+  | _ -> move_unlocked pac board gs g
+
+let random_trajectories () =
+  let options = List.map (fun x -> (x, randint 100)) directions in
+  List.sort cmp options
+
+let blocked_inactive board position = not (Board.is_container board position)
+
+let move_all_locked pac board gs g exits =
+  if blocked_inactive board (pos g) then
+    let g' = { g with active = true } in
+    move_all pac board gs g' exits
+  else
+    move_best_option (random_trajectories ()) board g (blocked_inactive board)
+
+let move pac board gs exits g =
+  if is_active g then move_all pac board gs g exits
+  else move_all_locked pac board gs g exits
