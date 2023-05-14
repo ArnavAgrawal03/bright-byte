@@ -36,9 +36,9 @@ val is_scatter : t -> bool
 val scatter_frames : t -> int
 (** [scatter_frames g] is the number of frames that [g] has been in scatter mode*)
 
-val target : t -> State.t -> t list -> Board.t -> Board.position
-(** [target g s gs b] is the target position of ghost [g] in state [s] with
-    ghosts [gs] and board [b]*)
+val target : t -> Logic.t -> t list -> Board.t -> Board.position
+(** [target g p gs b] is the target position of ghost [g] given states of pacman
+    [p] ghosts [gs] and board [b]*)
 
 (*-------- Tranforming functions --------*)
 val activate : t -> t
@@ -55,7 +55,7 @@ val unscatter : t -> t
 (** [unscatter g] is a ghost [g'] with same attributes as [g] but not in scatter
     mode. Requires: [is_scatter g] is [true]*)
 
-val move_target : State.t -> Board.t -> t list -> Board.position list -> t -> t
+val move_target : Logic.t -> Board.t -> t list -> Board.position list -> t -> t
 (** [move_target s b gs ps g] is a ghost [g'] with same attributes as [g] but
     moved to the target position - taking into account the positions of other
     movers such as the pacman and other ghosts*)

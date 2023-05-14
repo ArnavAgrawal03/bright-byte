@@ -134,4 +134,25 @@ let yellow_target g pac board threshold =
   if distance_man pac_position (pos g) <= float_of_int threshold then
     let intercept_ahead = move_n_steps pac_position pac_direction threshold in
     intercept_ahead
-  else scatter_target board (color g)
+  else scatter_target board Yellow
+
+let find_by_color c lst =
+  let filtered = List.filter (fun x -> color x = c) lst in
+  assert (List.length filtered = 1);
+  List.hd filtered
+
+let get_red = find_by_color Red
+let get_blue = find_by_color Blue
+let get_yellow = find_by_color Yellow
+let get_pink = find_by_color Pink
+
+let chase_target g pac gs board =
+  match color g with
+  | Red -> red_target pac
+  | Blue -> blue_target pac (get_red gs)
+  | Pink -> pink_target pac
+  | Yellow -> yellow_target g pac board 8
+
+let target g pac gs board =
+  if is_scatter g then scatter_target board (color g)
+  else chase_target g pac gs board
