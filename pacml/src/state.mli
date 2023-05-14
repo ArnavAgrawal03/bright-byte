@@ -1,6 +1,16 @@
 type t
 (** [t] is the type sued to store the current game state information*)
 
+type current_game =
+  | Won
+  | Lost
+  | Play
+
+type difficulty =
+  | Easy
+  | Medium
+  | Hard
+
 val init_state : Csv.t -> t
 (***)
 

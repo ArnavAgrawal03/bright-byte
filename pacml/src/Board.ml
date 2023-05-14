@@ -68,3 +68,9 @@ let char_display c =
 
 let row_display row = Array.map char_display row
 let board_display t = Array.map row_display t
+
+let csv_array (board_csv : Csv.t) : string array array =
+  let board_arr = Csv.to_array board_csv in
+  Array.map
+    (Array.map (fun s -> if s = "" then " " else String.make 1 s.[0]))
+    board_arr

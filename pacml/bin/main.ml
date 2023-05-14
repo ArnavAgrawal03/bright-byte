@@ -1,15 +1,39 @@
+open Csv
 open Game
 open Command
-
-(*open Logic*)
+open Board
 open State
 
-let data_dir_prefix = "data" ^ Filename.dir_sep
-let clear () = Sys.command "clear"
+exception Timeout
+exception Invalid_argument
 
 type t =
   | A of Csv.t
   | B of string
+
+let data_dir_prefix = "data" ^ Filename.dir_sep
+let clear () = ignore (Sys.command "clear")
+let frame_time = 1
+let default_terminal = Unix.tcgetattr Unix.stdin
+
+let go_to_default_terminal () =
+  Unix.tcsetattr Unix.stdin TCSANOW default_terminal
+
+let single_char () =
+  Unix.tcsetattr Unix.stdin TCSANOW
+    { (Unix.tcgetattr Unix.stdin) with c_icanon = false }
+
+let timeout f x max_time =
+  let handle_sigalrm signal =
+    if signal = Sys.sigalrm then raise Timeout else ()
+  in
+  let set_signal_handle =
+    Sys.set_signal Sys.sigalrm (Signal_handle handle_sigalrm)
+  in
+  let _ = ignore (Unix.alarm max_time) in
+  let value = f x in
+  let _ = ignore (Unix.alarm 0) in
+  value
 
 (**[get_file f] attempts to retrive csv f*)
 let get_file f =
@@ -25,9 +49,6 @@ let rec join_list = function
 
 (** [single_char] changes the terminal settings to allow parsing of a single
     character. *)
-
-(*let single_char () = Unix.tcsetattr Unix.stdin TCSANOW { (Unix.tcgetattr
-  Unix.stdin) with c_icanon = false }*)
 
 let rec print_line = function
   | [] -> print_string " "
@@ -67,46 +88,107 @@ let rec print_board (b : string list list) =
       (*print_string "\n";*)
       print_board tl
 
-let move g = function
-  | Up ->
-      print_string "Moving up! \n";
-      g
-  | Left ->
-      print_string "Moving left! \n";
-      g
-  | Right ->
-      print_string "Moving right! \n";
-      g
-  | Down ->
-      print_string "Moving down! \n";
-      g
-
-(**[play_game g] prints out the board g and parses parses through the user's
-   command*)
-let rec play_game g : unit =
-  let _ = clear () in
-  print_board (Array.to_list (Array.map Array.to_list (board g)));
-  match read_line () |> parse with
-  | Move m -> play_game (move g m)
-  | Pause ->
-      ANSITerminal.print_string [ ANSITerminal.green ]
-        "Game paused. Press p to resume. Press q to quit. \n";
-      play_game g
-  | Quit -> exit 0
-  | Error a ->
-      ANSITerminal.print_string [ ANSITerminal.red ] (a ^ "!\n");
-      play_game g
+let player_input () =
+  single_char ();
+  let command =
+    let single_input = input_char stdin in
+    match single_input with
+    | 'w' -> Some (Move Up)
+    | 'a' -> Some (Move Left)
+    | 's' -> Some (Move Down)
+    | 'd' -> Some (Move Right)
+    | 'p' -> Some Pause
+    | 'q' -> Some Quit
+    | _ -> raise Invalid_argument
+  in
+  go_to_default_terminal ();
+  command
 
 (**[start_game filename] retrives the file and starts the game in the initial
    state of g *)
+let update_state_ref state_ref cmd_ref command = cmd_ref := match command
+   with | Some (Pause | Quit) | None -> !cmd_ref | Some (Move m) -> Move m | _ -> raise Invalid_argument;
+
+   state_ref := match command with | Some cmd -> State.update !state_ref cmd |
+   None -> State.update !state_ref !cmd_ref
+
+   let rec handle_playing_state state command = update_state_ref state command
+   (try timeout player_input () frame_time with Timeout -> None); State.print
+   !state; if State.game_state !state = Won then begin print_endline
+   "Congratulations! You won the game!"; state := State.update !state Quit; end
+   else if State.game_state !state = Lost then begin print_endline "Oops! You
+   lost the game :("; state := State.update !state Quit; end else
+   handle_playing_state state command
+
+   let rec playing_game (file : Csv.t) = let state = ref (State.init_state file) in let command = ref (Move
+   Right) in State.print !state; handle_playing_state state command;
+   print_endline "Thanks for playing! Press Enter to return to the main menu.";
+   ignore (read_line ());
+
 let start_game filename : unit =
-  let file = get_file filename in
+  let file = Csv.load filename in
   match file with
-  | A g -> play_game (init_state g)
-  | B m -> print_string m
+  | g -> playing_game g
+  | _ -> print_string "Invalid CSV format"
+
+(*Do not touch below this!! it is all good*)
 
 (** [main ()] prompts for the game to play, then starts it. *)
-let main () =
+let rec main () =
+  main_menu ();
+  single_char ();
+  let input = input_char stdin in
+  go_to_default_terminal ();
+  match input with
+  | '1' -> directions ()
+  | '2' -> play_game ()
+  | '3' -> clear ()
+  | _ -> main ()
+
+and main_menu () =
+  clear ();
+  ANSITerminal.print_string [ ANSITerminal.red ] "\n\nWelcome to Pacman!\n";
+  print_endline
+    "What would you like to do?\n\
+    \ 1. View the directions\n\
+    \ 2. Play the game\n\
+    \ 3. Quit"
+
+and directions () =
+  clear ();
+  print_endline "To start the game:";
+  print_endline "Press 2 when you are on the screen with the main menu.";
+  print_endline
+    "Then you will be prompted to choose a difficulty level easy, medium, hard.";
+  print_endline
+    "Type out the difficulty level you want and press enter and then the game \
+     will start!";
+  print_endline "";
+  print_endline "How the board works:";
+  print_endline "The yellow ᗧ represents your Pac-Man character.";
+  print_endline
+    "In order to move Pac-MAN use the WASD keys (up, left, down, right \
+     respectively)";
+  print_endline
+    "The ghost emojis represent the ghosts and the green dots (▫) are the \
+     pac-dots ";
+  print_endline "The blue '#' respresent the walls.";
+  print_endline "";
+  print_endline "Rules of the game:";
+  print_endline
+    "The goal is to win the game by moving Pac-Man around the board until you \
+     have collected all of the pac-dots on the board.";
+  print_endline
+    "If you run into a ghost, then you lose a life and your Pac-Man will \
+     restart at it's original position";
+  print_endline "You can press 'p' to pause/resume the game";
+  print_endline "You can press 'q' to quit the game";
+  print_endline
+    "Additionally, we recommend making your terminal full screen for the best \
+     playing experience!";
+  print_endline "Thank you for playing and good luck!"
+
+and play_game () : unit =
   let _ = clear () in
   ANSITerminal.print_string [ ANSITerminal.red ] "\n\nWelcome to Pacman!\n";
   ANSITerminal.print_string [ ANSITerminal.blue ]
@@ -114,7 +196,9 @@ let main () =
   print_string "> ";
   match read_line () with
   | exception End_of_file -> ()
-  | file_name -> start_game (data_dir_prefix ^ file_name ^ ".csv")
+  | file_name ->
+      let full_file_name = data_dir_prefix ^ file_name ^ ".csv" in
+      start_game full_file_name
 
 (* Execute the game engine. *)
 let () = main ()
