@@ -29,14 +29,17 @@ let init pos color dir =
 let pos t = t.pos
 let color t = t.color
 let dir t = t.dir
-let active t = t.active
+let is_active t = t.active
 
 (* transforming functions*)
 let move_aux dx dy pos = (fst pos + dx, snd pos + dy)
 
 let move (g : t) (steps : int) (dir : Command.dir) : t =
-  match dir with
-  | Up -> { g with pos = move_aux 0 (-steps) g.pos }
-  | Down -> { g with pos = move_aux 0 steps g.pos }
-  | Right -> { g with pos = move_aux steps 0 g.pos }
-  | Left -> { g with pos = move_aux (-steps) 0 g.pos }
+  let p =
+    match dir with
+    | Up -> move_aux 0 (-steps) g.pos
+    | Down -> move_aux 0 steps g.pos
+    | Right -> move_aux steps 0 g.pos
+    | Left -> move_aux (-steps) 0 g.pos
+  in
+  { g with pos = p }
