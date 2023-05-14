@@ -245,3 +245,6 @@ let move_unlocked pac board gs g =
     (* going reverse must be the last option irrespective of direction*)
   in
   move_best_option directed_options board g (blocked_all board)
+
+let move_in_container pac board gs g exits = 
+  let directions' = List.flatten (List.map )
