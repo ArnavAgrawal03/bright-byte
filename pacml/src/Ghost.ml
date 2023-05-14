@@ -180,7 +180,7 @@ let move_options g target =
   let position = pos g in
   let possible_positions = List.map (move_one_step position) directions in
   let dists_from_target = List.map (distance_man target) possible_positions in
-  let unsorted_options = List.combine possible_positions dists_from_target in
+  let unsorted_options = List.combine directions dists_from_target in
   List.sort cmp unsorted_options
 
 let step_aux g board dir is_blocked =
@@ -195,3 +195,53 @@ let step_aux g board dir is_blocked =
       let delta = (breadth, length) in
       let pos' = point_op delta step_target wrap_around in
       { g with pos = pos'; dir }
+
+let rec dequeue (target_dir : Command.dir) lst =
+  match lst with
+  | [] -> []
+  | (dir', dist') :: tail when dir' = target_dir -> tail @ [ (dir', dist') ]
+  | h :: tail -> h :: dequeue target_dir tail
+
+let rec move_best_option options board g is_blocked =
+  match options with
+  | [] -> g (* no options available!*)
+  | data :: rest_options ->
+      let g' = step_aux g board (fst data) is_blocked in
+      if pos g' <> pos g then g' (* sucessfully moved positions*)
+      else
+        move_best_option rest_options board g
+          is_blocked (* somehow blocked, so try next best option*)
+
+(* check is move blocked by container or border - written in a way to add
+   additional checks for future features*)
+let blocked_aux func_list board position =
+  let f g = g board position in
+  let bool_vals = List.map f func_list in
+  List.fold_left ( || ) false bool_vals
+
+let wall_border = [ Board.is_border ]
+
+let all_borders =
+  let open Board in
+  [ is_border (*is_container; is_container_exit*) ]
+
+let non_exit_borders = Board.[ is_border (*is_container;*) ]
+let blocked_all = blocked_aux all_borders
+let blocked_wall = blocked_aux wall_border
+let blocked_non_exit = blocked_aux non_exit_borders
+
+let reorder options (dir : Command.dir) =
+  match dir with
+  | Up -> dequeue Down options
+  | Down -> dequeue Up options
+  | Right -> dequeue Left options
+  | Left -> dequeue Right options
+
+let move_unlocked pac board gs g =
+  let targeted = target g pac gs board in
+  let options = move_options g targeted in
+  let directed_options =
+    reorder options (dir g)
+    (* going reverse must be the last option irrespective of direction*)
+  in
+  move_best_option directed_options board g (blocked_all board)
