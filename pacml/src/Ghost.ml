@@ -18,7 +18,6 @@ let directions =
   let open Command in
   [ Up; Down; Left; Right ]
 
-(*-------- Constructor --------*)
 let init pos_a color_a dir_a active_a =
   {
     pos = pos_a;
@@ -33,6 +32,8 @@ let init pos_a color_a dir_a active_a =
 let inits arg_list =
   List.map (fun (pos_a, color_a) -> init pos_a color_a Up false) arg_list
 
+let start_pos g = g.og_pos
+let reset g = { g with pos = g.og_pos }
 let pos g = g.pos
 let color g = g.color
 let dir g = g.dir
@@ -279,3 +280,10 @@ let move_all_locked pac board gs g exits =
 let move pac board gs exits g =
   if is_active g then move_all pac board gs g exits
   else move_all_locked pac board gs g exits
+
+let rec random_directions l =
+  match l with
+  | [] -> Up
+  | (dir, num) :: t -> if num = 0 then dir else random_directions t
+
+let incr_scatter_frames g = { g with scatter_frames = g.scatter_frames + 1 }
