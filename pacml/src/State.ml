@@ -55,7 +55,7 @@ let get_score (game : t) : int = game.score
 let is_paused (game : t) : bool = game.paused
 let should_quit (game : t) : bool = game.quit_game
 let get_game_state (game : t) : game_over = game.game_state
-let get_exit_tiles (game : t) : Board.position list = game.exit_tiles
+let get_exits (game : t) : Board.position list = game.exits
 let get_max_orbs (game : t) : int = game.max_orbs
 let get_difficulty (game : t) : difficulty = game.difficulty
 let origin = (0, 0)
@@ -137,3 +137,18 @@ let collide_single pac g =
 
 let collide_with_any pac ghosts =
   ghosts |> List.map (collide_single pac) |> List.fold_left ( || ) false
+
+let reset_single_g pac g =
+  let col_a = Ghost.is_scatter g && Ghost.pos g = Logic.position pac in
+  let col_b = through pac g in
+  if col_a || col_b then g |> Ghost.reset |> Ghost.unscatter else g
+
+let reset_ghosts pac ghosts = ghosts |> List.map (reset_single_g pac)
+
+let eat_g_score pac g =
+  if (Ghost.is_scatter g && Ghost.pos g = Logic.position pac) || through pac g
+  then ghost_value
+  else 0
+
+let eat_gs_score pac gs =
+  gs |> List.map (eat_g_score pac) |> List.fold_left ( + ) 0
