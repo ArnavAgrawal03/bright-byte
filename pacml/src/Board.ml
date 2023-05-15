@@ -14,8 +14,7 @@ let exit_row = "_"
 
 let is_border (t : t) (position : position) : bool =
   try
-    let row = t.(snd position) in
-    let cell = row.(fst position) in
+    let cell = t.(snd position).(fst position) in
     cell = border
   with Invalid_argument _ -> false
 

@@ -254,7 +254,7 @@ let print_single = function
   | "Y" -> ANSITerminal.print_string [ ANSITerminal.yellow ] "ᗣ "
   | "#" -> ANSITerminal.print_string [ ANSITerminal.blue ] "# "
   | "" -> ANSITerminal.print_string [ ANSITerminal.default ] "  "
-  | "o" -> ANSITerminal.print_string [ ANSITerminal.default ] "▫ "
+  | "O" -> ANSITerminal.print_string [ ANSITerminal.default ] "▫ "
   | "|" -> ANSITerminal.print_string [ ANSITerminal.default ] "| "
   | "-" -> ANSITerminal.print_string [ ANSITerminal.default ] "--"
   | "_" -> ANSITerminal.print_string [ ANSITerminal.default ] "__"
@@ -267,27 +267,73 @@ let seq r =
   print_endline ""
 
 let print_board arr = Array.iter seq arr
-let edit_at_coord arr (x, y) s = arr.(y).(x) <- s
-let ghost_rep g = if Ghost.is_scatter g then "👻" else "ᗣ "
+
+let edit_at_coord arr (x, y) s =
+  try arr.(y).(x) <- s
+  with _ -> print_endline (string_of_int x ^ ", " ^ string_of_int y)
+
+let ghost_rep g =
+  if Ghost.is_scatter g then "👻"
+  else
+    match Ghost.color g with
+    | Red -> "R"
+    | Blue -> "B"
+    | Pink -> "P"
+    | Yellow -> "Y"
+
+let find_rep_aux rep arr pos_ref =
+  for row = 0 to Array.length arr - 1 do
+    for col = 0 to Array.length arr.(row) - 1 do
+      if arr.(row).(col) = rep then pos_ref := (col, row)
+    done
+  done;
+  !pos_ref
+
+let find_rep arr rep = find_rep_aux rep arr (ref (0, 0))
+
+(* let update_ghost_rep gs arr = gs |> List.map (fun g -> (Ghost.pos g,
+   ghost_rep g)) |> List.iter (fun (p, s) -> edit_at_coord arr p s) *)
 
 let update_ghost_rep gs arr =
-  gs
-  |> List.map (fun g -> (Ghost.pos g, ghost_rep g))
-  |> List.iter (fun (p, s) -> edit_at_coord arr p s)
+  let old_positions = List.map (fun g -> find_rep arr (ghost_rep g)) gs in
+  let wanted_positions_and_rep =
+    List.map (fun g -> (Ghost.pos g, ghost_rep g)) gs
+  in
+  List.iter (fun coord -> edit_at_coord arr coord "") old_positions;
+  List.iter
+    (fun (coord, rep) -> edit_at_coord arr coord rep)
+    wanted_positions_and_rep
+
+let update_pac_rep pac arr =
+  let old_position = find_rep arr "C" in
+  let x, y = Logic.position pac in
+  edit_at_coord arr old_position "";
+  edit_at_coord arr (x, y) "C"
 
 let printable game =
   let arr = game.board in
   update_ghost_rep game.ghosts arr;
+  update_pac_rep game.pacman arr;
   arr
 
 let blank () = Sys.command "clear" |> ignore
 let welcome_message = "Hello! Welcome to Pacman!"
+
+let string_of_coord (x, y) =
+  "(" ^ string_of_int x ^ ", " ^ string_of_int y ^ ")"
 
 let print_game game =
   blank ();
   print_endline welcome_message;
   print_endline ("Current Lives " ^ string_of_int game.lives);
   print_endline ("Current Score " ^ string_of_int game.score);
+  let pac_loc = string_of_coord (Logic.position game.pacman) in
+  print_endline ("Pacman's Current Location " ^ pac_loc);
+  let ghost_locs =
+    game.ghosts |> List.map Ghost.pos |> List.map string_of_coord
+    |> String.concat ", "
+  in
+  print_endline ("Ghost Locations " ^ ghost_locs);
   print_board (printable game);
   print_endline "Use the WASD keys to move Pacman";
   if game.paused then print_endline "Game Paused (p to resume)" else ()

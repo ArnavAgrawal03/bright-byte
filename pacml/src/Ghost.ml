@@ -65,15 +65,8 @@ let rev g =
   turn g dir'
 
 let switch_active g = { g with active = not g.active }
-
-let activate g =
-  assert (not g.active);
-  switch_active g
-
-let deactivate g =
-  assert g.active;
-  switch_active g
-
+let activate g = if is_active g then g else switch_active g
+let deactivate g = if not (is_active g) then g else switch_active g
 let switch_scatter g = { g with scatter = not g.scatter; scatter_frames = 0 }
 let scatter g = if is_scatter g then g else switch_scatter g
 let unscatter g = if not (is_scatter g) then g else switch_scatter g
@@ -185,7 +178,7 @@ let step_aux g board dir is_blocked =
   match is_blocked step_target with
   | true -> g
   | false ->
-      let wrap_around a b = (a + b) mod b in
+      let wrap_around a b = if b = 0 then a else (a + b) mod b in
       let delta = (breadth, length) in
       let pos' = point_op delta step_target wrap_around in
       { g with pos = pos'; dir }

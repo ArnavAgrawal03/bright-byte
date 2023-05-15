@@ -8,7 +8,7 @@ exception Invalid_argument
 
 let data_dir_prefix = "data" ^ Filename.dir_sep
 let clear () = ignore (Sys.command "clear")
-let frame_time = 3
+let frame_time = 1
 let default_terminal = Unix.tcgetattr Unix.stdin
 
 let go_to_default_terminal () =
@@ -64,7 +64,7 @@ let player_input () =
     | 'd' -> Some (Move Right)
     | 'p' -> Some Pause
     | 'q' -> Some Quit
-    | _ -> raise Invalid_argument
+    | _ -> None
   in
   go_to_default_terminal ();
   command
@@ -82,7 +82,7 @@ let change_ref_state ref_command ref_state command =
      | _ -> raise Invalid_argument);
   ref_state :=
     match command with
-    | Some command -> State.update !ref_state command
+    | Some c -> State.update !ref_state c
     | None -> State.update !ref_state !ref_command
 
 let rec handle_playing_state (state : State.t ref) command =
