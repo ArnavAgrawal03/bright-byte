@@ -161,8 +161,12 @@ and play_game () : unit =
      ghosts!): \n";
   print_string "> ";
   match read_line () with
-  | exception End_of_file -> ()
-  | file_name -> start_game file_name
+  | exception End_of_file -> main ()
+  | file_name ->
+      if file_name = "easy" || file_name = "normal" || file_name = "hard" then
+        start_game file_name
+      else print_endline "That's not a valid difficulty! Let's try that again:";
+      main ()
 
 (* Execute the game engine. *)
 let () = main ()
