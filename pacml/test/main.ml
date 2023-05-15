@@ -30,7 +30,7 @@ let hard = Board.csv_array "hard.csv"
 
 let is_border_test (name : string) (input1 : Board.t) (input2 : Board.position)
     (expected_output : bool) =
-  name >:: fun _ -> assert_equal expected_output (Board.is_border input1 input2)
+  name >:: fun _ -> assert_equal expected_output (is_border input1 input2)
 
 let command_tests =
   [
