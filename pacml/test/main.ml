@@ -4,6 +4,8 @@ open Command
 (* open Logic *)
 (* open State open Board *)
 
+(** *)
+
 (* let dir_stiring d = match d with | Up -> "up" | Left -> "left" | Down ->
    "down" | Right -> "right" *)
 (* let string_of_position position = match position with | x, y -> "(" ^
