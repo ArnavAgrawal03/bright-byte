@@ -75,15 +75,8 @@ let deactivate g =
   switch_active g
 
 let switch_scatter g = { g with scatter = not g.scatter; scatter_frames = 0 }
-
-let scatter g =
-  assert (not g.scatter);
-  switch_scatter g
-
-let unscatter g =
-  assert g.scatter;
-  switch_scatter g
-
+let scatter g = switch_scatter g
+let unscatter g = switch_scatter g
 let l1_norm p = float_of_int (abs (fst p) + abs (snd p))
 let l2_norm p = sqrt (float_of_int ((fst p * fst p) + (snd p * snd p)))
 let point_op p1 p2 op = (op (fst p1) (fst p2), op (snd p1) (snd p2))
@@ -282,12 +275,12 @@ let move pac board gs exits g =
   else move_all_locked pac board gs g exits
 
 let rec random_directions g board l =
-  let open Command in
-  match l with
-  | [] -> Up
-  | (dir, _) :: t ->
-      let g' = step_aux g board dir (blocked_wall board) in
-      if pos g' <> pos g then dir else random_directions g board t
+  Command.(
+    match l with
+    | [] -> Up
+    | (dir, _) :: t ->
+        let g' = step_aux g board dir (blocked_wall board) in
+        if pos g' <> pos g then dir else random_directions g board t)
 
 let init_random arg_list board =
   let create_ghost (pos', color') =

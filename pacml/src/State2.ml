@@ -42,7 +42,7 @@ type t = {
   paused : bool;
   quit_game : bool;
   game_state : game_over;
-  exit_tiles : Board.position list;
+  exits : Board.position list;
   max_orbs : int;
   difficulty : difficulty;
 }
@@ -90,7 +90,24 @@ let start_game board level =
     paused = false;
     quit_game = false;
     game_state = Playing;
-    exit_tiles = !exits;
+    exits = !exits;
     max_orbs = !ghost_data |> List.length;
     difficulty = level |> difficulty_of_string;
   }
+
+let move_pac dir game =
+  { game with pacman = Logic.move_pac game.pacman game.board dir }
+
+let moved_ghosts game ghosts =
+  ghosts |> List.map (Ghost.move game.pacman game.board game.ghosts game.exits)
+
+let move_ghosts game = { game with ghosts = game.ghosts |> moved_ghosts game }
+
+let scatter_incr_single g =
+  let open Ghost in
+  if is_scatter g then incr_scatter_frames g else g
+
+let update_scatter_frames game =
+  { game with ghosts = game.ghosts |> List.map scatter_incr_single }
+
+let decr_lives game = { game with lives = game.lives - 1 }
