@@ -176,7 +176,7 @@ and directions () =
     "Additionally, we recommend making your terminal full screen for the \
      experience!";
   print_endline "Thank you for playing and good luck!";
-  print_endline "Press a key to return to main menu";
+  print_endline "Press enter to return to main menu";
   match read_line () with
   | _ -> main ()
 

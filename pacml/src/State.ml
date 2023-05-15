@@ -301,7 +301,7 @@ let update_ghost_rep gs arr diff =
     let wanted_positions_and_rep =
       List.map (fun g -> (Ghost.pos g, ghost_rep g)) gs
     in
-    let trail = if diff = Normal then "" else "#" in
+    let trail = if diff = Normal || diff = Easy then "" else "#" in
     List.iter (fun (x, y) -> edit_at_coord arr (x, y) trail) old_positions;
     List.iter
       (fun (coord, rep) -> edit_at_coord arr coord rep)

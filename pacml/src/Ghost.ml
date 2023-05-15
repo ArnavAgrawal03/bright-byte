@@ -178,15 +178,19 @@ let step_aux g board dir is_blocked =
   let length = Array.length board in
   let breadth = Array.length arr.(1) in
   let step_target = Board.move_pos (pos g) dir in
-  (* let _ = print_endline (string_of_coord step_target) in let _ =
-     print_endline (string_of_bool (is_blocked step_target)) in *)
-  match is_blocked step_target with
-  | true -> g
-  | false ->
-      let wrap_around a b = (a + b) mod length in
-      let delta = (breadth, length) in
-      let pos' = point_op delta step_target wrap_around in
-      { g with pos = pos'; dir }
+  if
+    Board.is_border board step_target
+    || Board.is_container board step_target
+    || Board.is_container_exit board step_target
+  then g
+  else
+    match is_blocked step_target with
+    | true -> g
+    | false ->
+        let wrap_around a b = (a + b) mod length in
+        let delta = (breadth, length) in
+        let pos' = point_op delta step_target wrap_around in
+        { g with pos = pos'; dir }
 
 let rec dequeue (target_dir : Command.dir) lst =
   match lst with
