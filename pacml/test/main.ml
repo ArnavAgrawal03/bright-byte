@@ -5,16 +5,20 @@ open Logic
 open Board
 (* open State open Ghosts*)
 
-(** The main file was tested manually in the terminal in order to check if
-    everything was printing and displaying correctly. The rest of the
-    functionality was automatically testing by OUnit. For this testing suite, we
-    used a glass box strategy. This was because we wanted to find the edge cases
-    inside the methods in order to see if they were implemented correctly. By
-    combining these two approaches, we have covered both the internal and
-    external logic used by the game. The manual testing will check has covered
-    both the game's overall functionality and display features, while the OUnit
-    testing tests the individual methods. As a result, we have demonstrated
-    correctness of the code.*)
+(** The main file (run by “make play”) was tested manually in the terminal in
+    order to check if everything was printing and displaying correctly. This
+    also allowed us to check for correct behaviour for ghosts as well as the
+    state - running state got really complicated, and we were able to test most
+    of the functions by directly playing the game. If the game works correctly,
+    then we’ve successfully tested state and ghosts - as required. The rest of
+    the functionality was tested via OUnit2. We used a mix of glass box and
+    black box testing. The implementer for each file implemented test cases. The
+    other 2 (non-implementers) added test cases by exclusively looking at the
+    .mli files (specification). By combining these two approaches, we have
+    covered both the internal and external logic used by the game. The manual
+    testing will check both the game's overall functionality and display
+    features, while the OUnit testing tests the individual methods.. So, with
+    high probability, our code is correctly implemented*)
 
 let command_parse_test (name : string) (command : string)
     (expected_output : command) =
