@@ -6,6 +6,7 @@ type position = int * int
 let board_array t = Array.map Array.copy t
 let border = "#"
 let pac_dots = "O"
+let big_pac_dots = "@"
 let empty = ""
 let container_col = "|"
 let container_row = "-"
@@ -35,7 +36,9 @@ let is_container_exit (t : t) (position : position) : bool =
 let rec num_dots_row row =
   match row with
   | [] -> 0
-  | h :: t -> if h = pac_dots then 1 + num_dots_row t else num_dots_row t
+  | h :: t ->
+      if h = pac_dots || h = big_pac_dots then 1 + num_dots_row t
+      else num_dots_row t
 
 let rec num_dots_helper rows : int =
   match rows with
@@ -51,16 +54,20 @@ let update_empty_dot (position : position) (t : t) =
   match position with
   | x, y ->
       let new_pos = dup.(y).(x) in
-      if new_pos = pac_dots then (
+      if new_pos = pac_dots || new_pos = big_pac_dots then (
         dup.(y).(x) <- empty;
         dup)
       else dup
 
 let won t = if num_dots_left t = 0 then true else false
 
-let got_dot postion t =
-  match postion with
+let got_dot position t =
+  match position with
   | x, y -> t.(y).(x) = pac_dots
+
+let got_big_dot position t =
+  match position with
+  | x, y -> t.(y).(x) = big_pac_dots
 
 let helper_move_pos change_x change_y position =
   match position with

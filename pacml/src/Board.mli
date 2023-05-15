@@ -10,6 +10,10 @@ val border : string
 val pac_dots : string
 (** [pac_dots] is a string representing the pac-dots on the board. *)
 
+val big_pac_dots : string
+(** [big_pac_dots] is a string representing the bigger pac-dots on the board
+    that allow for scatter state. *)
+
 val empty : string
 (** [empty] is a string representing the empty spaces on the board. *)
 
@@ -52,6 +56,10 @@ val won : t -> bool
 val got_dot : position -> t -> bool
 (**[got_dot p t] returns true if there is a pac-dot at position [p] on board [t]
    else false*)
+
+val got_big_dot : position -> t -> bool
+(**[got_big_dot p t] returns true if there is a big pac-dot at position [p] on
+   board [t] else false*)
 
 val move_pos : position -> Command.dir -> position
 (**[move_pos p dir] changes the current position [p] by 1 step in the dirrection
