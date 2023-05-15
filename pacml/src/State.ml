@@ -1,5 +1,3 @@
-open ANSITerminal
-
 type game_over =
   | Playing
   | Won
@@ -247,3 +245,49 @@ let init_state board pac gs lives score paused quit_game game_state exits
     max_orbs;
     difficulty;
   }
+
+let print_single = function
+  | "C" -> ANSITerminal.print_string [ ANSITerminal.yellow ] "ᗧ "
+  | "R" -> ANSITerminal.print_string [ ANSITerminal.red ] "ᗣ "
+  | "B" -> ANSITerminal.print_string [ ANSITerminal.blue ] "ᗣ "
+  | "P" -> ANSITerminal.print_string [ ANSITerminal.magenta ] "ᗣ "
+  | "Y" -> ANSITerminal.print_string [ ANSITerminal.yellow ] "ᗣ "
+  | "#" -> ANSITerminal.print_string [ ANSITerminal.blue ] "# "
+  | "" -> ANSITerminal.print_string [ ANSITerminal.default ] "  "
+  | "o" -> ANSITerminal.print_string [ ANSITerminal.default ] "▫ "
+  | "|" -> ANSITerminal.print_string [ ANSITerminal.default ] "| "
+  | "-" -> ANSITerminal.print_string [ ANSITerminal.default ] "--"
+  | "_" -> ANSITerminal.print_string [ ANSITerminal.default ] "__"
+  | x -> ANSITerminal.print_string [ ANSITerminal.default ] x
+
+let print_row = Array.iter print_single
+
+let seq r =
+  print_row r;
+  print_endline ""
+
+let print_board arr = Array.iter seq arr
+let edit_at_coord arr (x, y) s = arr.(y).(x) <- s
+let ghost_rep g = if Ghost.is_scatter g then "👻" else "ᗣ "
+
+let update_ghost_rep gs arr =
+  gs
+  |> List.map (fun g -> (Ghost.pos g, ghost_rep g))
+  |> List.iter (fun (p, s) -> edit_at_coord arr p s)
+
+let printable game =
+  let arr = game.board in
+  update_ghost_rep game.ghosts arr;
+  arr
+
+let blank () = Sys.command "clear" |> ignore
+let welcome_message = "Hello! Welcome to Pacman!"
+
+let print game =
+  blank ();
+  print_endline welcome_message;
+  print_endline ("Current Lives " ^ string_of_int game.lives);
+  print_endline ("Current Score " ^ string_of_int game.score);
+  print_board (printable game);
+  print_endline "Use the arrow keys to move Pacman";
+  if game.paused then print_endline "Game Paused (p to resume)" else ()
