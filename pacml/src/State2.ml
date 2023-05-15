@@ -110,4 +110,30 @@ let scatter_incr_single g =
 let update_scatter_frames game =
   { game with ghosts = game.ghosts |> List.map scatter_incr_single }
 
-let decr_lives game = { game with lives = game.lives - 1 }
+let eaten game =
+  {
+    game with
+    lives = game.lives - 1;
+    ghosts = List.map Ghost.unscatter (List.map Ghost.reset game.ghosts);
+    pacman = Logic.make_og_pos game.pacman;
+  }
+
+let reverse = function
+  | Command.Up -> Command.Down
+  | Down -> Up
+  | Left -> Right
+  | Right -> Left
+
+let through pac g =
+  let opposed = Ghost.dir g = reverse (Logic.dir pac) in
+  let passed =
+    Logic.position pac = Board.move_pos (Ghost.pos g) (Logic.dir pac)
+  in
+  opposed && passed
+
+let collide_single pac g =
+  ((not (Ghost.is_scatter g)) && Ghost.pos g = Logic.position pac)
+  || through pac g
+
+let collide_with_any pac ghosts =
+  ghosts |> List.map (collide_single pac) |> List.fold_left ( || ) false
