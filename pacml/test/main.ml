@@ -184,8 +184,8 @@ let logic_tests =
       "Pac-Man starts at (-100,-2380) and is currently at (5023,3520)"
       (5023, 3520) (-100, -2380) (-100, -2380);
     make_og_pos_test
-      "Pac-Man starts at (-8, 3125) and is currently at (-123,-14532)"
-      (-8, 3125) (-123, -14532) (-123, -14532);
+      "Pac-Man starts at (-8, 3125) and is currently at (-123,-14533)"
+      (-8, 3125) (-123, -14533) (-123, -14533);
   ]
 
 let suite =
