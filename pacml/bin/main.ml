@@ -75,7 +75,7 @@ let rec print_line = function
       ANSITerminal.print_string [ ANSITerminal.yellow ] "ᗧ ";
       print_line tl
   | "" :: tl ->
-      print_string "  ";
+      print_string " ";
       print_line tl
   | x -> print_string (join_list x)
 
@@ -85,8 +85,7 @@ let rec print_board (b : string list list) =
   | [] -> print_string "\n"
   | hd :: tl ->
       print_line hd;
-      (*print_string "\n";*)
-      print_board tl
+      (*print_string "\n";*) print_board tl
 
 let player_input () =
   single_char ();
@@ -104,10 +103,10 @@ let player_input () =
   go_to_default_terminal ();
   command
 
-(**[start_game filename] retrives the file and starts the game in the initial
-   state of g *)
-let update_state_ref state_ref cmd_ref command = cmd_ref := match command
-   with | Some (Pause | Quit) | None -> !cmd_ref | Some (Move m) -> Move m | _ -> raise Invalid_argument;
+ (**[start_game filename] retrives the file and starts the game in the initial
+   state of g *) let update_state_ref state_ref cmd_ref command = cmd_ref :=
+   match command with | Some (Pause | Quit) | None -> !cmd_ref | Some (Move m)
+   -> Move m | _ -> raise Invalid_argument;
 
    state_ref := match command with | Some cmd -> State.update !state_ref cmd |
    None -> State.update !state_ref !cmd_ref
@@ -120,18 +119,15 @@ let update_state_ref state_ref cmd_ref command = cmd_ref := match command
    lost the game :("; state := State.update !state Quit; end else
    handle_playing_state state command
 
-   let rec playing_game (file : Csv.t) = let state = ref (State.init_state file) in let command = ref (Move
-   Right) in State.print !state; handle_playing_state state command;
-   print_endline "Thanks for playing! Press Enter to return to the main menu.";
-   ignore (read_line ());
+   let rec playing_game (file : Csv.t) = let state = ref (State.init_state file)
+   in let command = ref (Move Right) in State.print !state; handle_playing_state
+   state command; print_endline "Thanks for playing! Press Enter to return to
+   the main menu."; ignore (read_line ());
 
-let start_game filename : unit =
-  let file = Csv.load filename in
-  match file with
-  | g -> playing_game g
-  | _ -> print_string "Invalid CSV format"
+   let start_game filename : unit = let file = Csv.load filename in match file
+   with | g -> playing_game g | _ -> print_string "Invalid CSV format"
 
-(*Do not touch below this!! it is all good*)
+(**Do not touch below this!! it is all good*)
 
 (** [main ()] prompts for the game to play, then starts it. *)
 let rec main () =
@@ -150,42 +146,45 @@ and main_menu () =
   ANSITerminal.print_string [ ANSITerminal.red ] "\n\nWelcome to Pacman!\n";
   print_endline
     "What would you like to do?\n\
-    \ 1. View the directions\n\
-    \ 2. Play the game\n\
-    \ 3. Quit"
+    \  1.\n\
+    \   View the directions\n\
+    \  2. Play the game\n\
+    \  3. Quit"
 
 and directions () =
   clear ();
   print_endline "To start the game:";
   print_endline "Press 2 when you are on the screen with the main menu.";
   print_endline
-    "Then you will be prompted to choose a difficulty level easy, medium, hard.";
+    "Then you will be prompted to choose a difficulty level easy,\n\
+    \   medium, hard.";
   print_endline
-    "Type out the difficulty level you want and press enter and then the game \
-     will start!";
+    "Type out the difficulty level you want and\n\
+    \   press enter and then the game  will start!";
   print_endline "";
   print_endline "How the board works:";
-  print_endline "The yellow ᗧ represents your Pac-Man character.";
+  print_endline "The yellow ᗧ represents your Pac-Man\n   character.";
   print_endline
-    "In order to move Pac-MAN use the WASD keys (up, left, down, right \
-     respectively)";
+    "In order to move Pac-MAN use the WASD keys (up,\n\
+    \   left, down, right  respectively)";
   print_endline
-    "The ghost emojis represent the ghosts and the green dots (▫) are the \
-     pac-dots ";
-  print_endline "The blue '#' respresent the walls.";
+    "The ghost emojis represent\n\
+    \   the ghosts and the green dots (▫) are the  pac-dots ";
+  print_endline "The\n   blue '#' respresent the walls.";
   print_endline "";
-  print_endline "Rules of the game:";
+  print_endline "Rules of\n   the game:";
   print_endline
-    "The goal is to win the game by moving Pac-Man around the board until you \
-     have collected all of the pac-dots on the board.";
+    "The goal is to win the game by moving Pac-Man\n\
+    \   around the board until you  have collected all of the pac-dots on the\n\
+    \   board.";
   print_endline
-    "If you run into a ghost, then you lose a life and your Pac-Man will \
-     restart at it's original position";
-  print_endline "You can press 'p' to pause/resume the game";
-  print_endline "You can press 'q' to quit the game";
+    "If you run into a ghost, then you lose a life and\n\
+    \   your Pac-Man will  restart at it's original position";
+  print_endline "You\n   can press 'p' to pause/resume the game";
+  print_endline "You can press 'q' to\n   quit the game";
   print_endline
-    "Additionally, we recommend making your terminal full screen for the best \
-     playing experience!";
+    "Additionally, we recommend making your\n\
+    \   terminal full screen for the best  playing experience!";
   print_endline "Thank you for playing and good luck!"
 
 and play_game () : unit =

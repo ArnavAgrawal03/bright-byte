@@ -69,5 +69,5 @@ val board_display : t -> t
 (**[board_display t] represents the board as an array which only contains the
    ghosts and walls*)
 
-val csv_array : Csv.t -> t
+val csv_array : string -> t
 (**[csv_array t] gives the array of the csv file [t]*)
