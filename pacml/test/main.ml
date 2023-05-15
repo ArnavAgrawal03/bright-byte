@@ -23,6 +23,14 @@ let command_dir_parse_test (name : string) (command : string)
     (expected_output : command) =
   name >:: fun _ -> assert_equal expected_output (parse command)
 
+let easy = Board.csv_array (Csv.load "easy.csv")
+let medium = Board.csv_array (Csv.load "medium.csv")
+let hard = Board.csv_array (Csv.load "hard.csv")
+
+let is_border_test (name : string) (input1 : Board.t) (input2 : Board.position)
+    (expected_output : bool) =
+  name >:: fun _ -> assert_equal expected_output (Board.is_border input1 input2)
+
 let command_tests =
   [
     command_parse_test "Parses the key 'q' as the command quit correctly" "q"
@@ -68,6 +76,25 @@ let command_tests =
       (Move Up);
   ]
 
+let board_tests =
+  [
+    is_border_test "is_border (0,0) easy is true" easy (0, 0) true;
+    is_border_test "is_border (0,0) medium is true" medium (0, 0) true;
+    is_border_test "is_border (0,0) hard is true" hard (0, 0) true;
+    is_border_test "is_border (0,1) easy is true" easy (0, 1) true;
+    is_border_test "is_border (0,1) medium is true" medium (0, 1) true;
+    is_border_test "is_border (0,1) hard is true" hard (0, 1) true;
+    is_border_test "is_border (1,1) easy is true" easy (1, 1) false;
+    is_border_test "is_border (1,1) medium is true" medium (1, 1) false;
+    is_border_test "is_border (1,1) hard is true" hard (1, 1) false;
+    is_border_test "is_border (3,3) easy is true" easy (3, 3) false;
+    is_border_test "is_border (3,3) medium is true" medium (3, 3) false;
+    is_border_test "is_border (3,3) hard is true" hard (3, 3) false;
+    is_border_test "is_border (14,14) easy is true" easy (14, 14) true;
+    is_border_test "is_border (0,0) medium is true" medium (19, 19) true;
+    is_border_test "is_border (0,0) hard is true" hard (21, 24) true;
+  ]
+
 let move_pac_test (name : string) (t : Logic.t) (board : Board.t)
     (dir : Command.dir) (expected_output : Logic.t) =
   name >:: fun _ -> assert_equal expected_output (move_pac t board dir)
@@ -75,5 +102,7 @@ let move_pac_test (name : string) (t : Logic.t) (board : Board.t)
 let make_og_pos_test (name : string) (t : Logic.t) (expected_output : Logic.t) =
   name >:: fun _ -> assert_equal expected_output (make_og_pos t)
 
-let suite = "Test suite for Pac-Man" >::: List.flatten [ command_tests ]
+let suite =
+  "Test suite for Pac-Man" >::: List.flatten [ command_tests; board_tests ]
+
 let _ = run_test_tt_main suite
