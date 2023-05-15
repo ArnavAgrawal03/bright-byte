@@ -24,9 +24,13 @@ let command_dir_parse_test (name : string) (command : string)
     (expected_output : command) =
   name >:: fun _ -> assert_equal expected_output (parse command)
 
-let easy = Board.csv_array "easy.csv"
-let medium = Board.csv_array "medium.csv"
-let hard = Board.csv_array "hard.csv"
+let data_dir_prefix = "data" ^ Filename.dir_sep
+let easy = Board.csv_array (data_dir_prefix ^ "easy.csv")
+let medium = Board.csv_array (data_dir_prefix ^ "normal.csv")
+let hard = Board.csv_array (data_dir_prefix ^ "hard.csv")
+let test1 = Board.csv_array (data_dir_prefix ^ "testa.csv")
+let test2 = Board.board_array (Board.csv_array (data_dir_prefix ^ "testb.csv"))
+let test3 = Board.board_array (Board.csv_array (data_dir_prefix ^ "test.csv"))
 
 let is_border_test (name : string) (input1 : Board.t) (input2 : Board.position)
     (expected_output : bool) =
@@ -161,26 +165,26 @@ let make_og_pos_test (name : string) (position : Board.position)
 
 let logic_tests =
   [
-    move_pac_test "Pac-Man starts at (1,1) and moves down to (1,2)" (1, 1) easy
+    move_pac_test "Pac-Man starts at (1,1) and moves down to (1,2)" (1, 1) test1
       Down (1, 2);
     move_pac_test
       "Pac-Man starts at (1,1) and tries to move up but cannot so position \
        stays at (1,1)"
-      (1, 1) easy Up (1, 1);
-    move_pac_test "Pac-Man starts at (1,1) and moves right to (2,1)" (1, 1) easy
-      Right (2, 1);
+      (1, 1) test1 Up (1, 1);
+    move_pac_test "Pac-Man starts at (1,1) and moves right to (2,1)" (1, 1)
+      test1 Right (2, 1);
     move_pac_test
       "Pac-Man starts at (1,1) and tries to move left but cannot so position \
        stays at (1,1)"
-      (1, 1) easy Left (1, 1);
-    move_pac_test "Pac-Man starts at (2,2) and moves down to (2,3)" (2, 2) easy
+      (1, 1) test1 Left (1, 1);
+    move_pac_test "Pac-Man starts at (2,2) and moves down to (2,3)" (2, 2) test2
       Down (2, 3);
-    move_pac_test "Pac-Man starts at (2,2) and moves up to (2,1)" (2, 2) easy Up
-      (2, 1);
-    move_pac_test "Pac-Man starts at (4,1) and moves right to (5,1)" (4, 1) easy
-      Right (5, 1);
-    move_pac_test "Pac-Man starts at (4,1) and moves right to (3,1)" (4, 1) easy
-      Left (3, 1);
+    move_pac_test "Pac-Man starts at (2,2) and moves up to (2,1)" (2, 2) test2
+      Up (2, 1);
+    move_pac_test "Pac-Man starts at (4,1) and moves right to (5,1)" (4, 1)
+      test3 Right (5, 1);
+    move_pac_test "Pac-Man starts at (4,1) and moves right to (3,1)" (4, 1)
+      test3 Left (3, 1);
     make_og_pos_test "Pac-Man starts at (0,0) and is currently at (6,8)" (6, 8)
       (0, 0) (0, 0);
     make_og_pos_test "Pac-Man starts at (-10,0) and is currently at (0,0)"
@@ -189,8 +193,8 @@ let logic_tests =
       "Pac-Man starts at (-100,-2380) and is currently at (5023,3520)"
       (5023, 3520) (-100, -2380) (-100, -2380);
     make_og_pos_test
-      "Pac-Man starts at (-8, 3125) and is currently at (-123,-14533)"
-      (-8, 3125) (-123, -14533) (-123, -14533);
+      "Pac-Man starts at (-8, 3125) and is currently at (-123,-14532)"
+      (-8, 3125) (-123, -14532) (-123, -14532);
   ]
 
 let suite =
