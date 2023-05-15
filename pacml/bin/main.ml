@@ -8,7 +8,7 @@ exception Invalid_argument
 
 let data_dir_prefix = "data" ^ Filename.dir_sep
 let clear () = ignore (Sys.command "clear")
-let frame_time = 1
+let frame_time = 3
 let default_terminal = Unix.tcgetattr Unix.stdin
 
 let go_to_default_terminal () =
@@ -175,13 +175,17 @@ and directions () =
   print_endline
     "Additionally, we recommend making your terminal full screen for the \
      experience!";
-  print_endline "Thank you for playing and good luck!"
+  print_endline "Thank you for playing and good luck!";
+  print_endline "Press a key to return to main menu";
+  match read_line () with
+  | _ -> main ()
 
 and play_game () : unit =
   let _ = clear () in
   ANSITerminal.print_string [ ANSITerminal.red ] "\n\nWelcome to Pacman!\n";
   ANSITerminal.print_string [ ANSITerminal.blue ]
-    "Please choose the difficulty (easy, normal, hard): \n";
+    "Please choose the difficulty (easy - no ghosts, normal, hard - invisible \
+     ghosts!): \n";
   print_string "> ";
   match read_line () with
   | exception End_of_file -> ()

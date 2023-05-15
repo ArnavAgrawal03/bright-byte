@@ -170,16 +170,16 @@ let move_options g target =
   let unsorted_options = List.combine directions dists_from_target in
   List.sort cmp unsorted_options
 
-let string_of_coord (x, y) =
-  "(" ^ string_of_int x ^ ", " ^ string_of_int y ^ ")"
+(* let string_of_coord (x, y) = "(" ^ string_of_int x ^ ", " ^ string_of_int y ^
+   ")" *)
 
 let step_aux g board dir is_blocked =
   let arr = Board.board_array board in
   let length = Array.length board in
   let breadth = Array.length arr.(1) in
   let step_target = Board.move_pos (pos g) dir in
-  let _ = print_endline (string_of_coord step_target) in
-  let _ = print_endline (string_of_bool (is_blocked step_target)) in
+  (* let _ = print_endline (string_of_coord step_target) in let _ =
+     print_endline (string_of_bool (is_blocked step_target)) in *)
   match is_blocked step_target with
   | true -> g
   | false ->
