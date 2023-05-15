@@ -39,5 +39,4 @@ opendoc: doc
 	@bash opendoc.sh
 
 count:
-	dune build
 	cloc -- ..
