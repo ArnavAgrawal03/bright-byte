@@ -106,3 +106,7 @@ val update : t -> Command.command -> t
 
 val print_game : t -> unit
 (**[print_game t] prints the state [t] on the screen.*)
+
+val update_ghost_rep : Ghost.t list -> Board.t -> difficulty -> unit
+(** [update_ghost_rep gs arr] modifies the game board to allow for scattered
+    ghosts*)

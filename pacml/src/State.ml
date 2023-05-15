@@ -294,15 +294,18 @@ let find_rep arr rep = find_rep_aux rep arr (ref (0, 0))
 (* let update_ghost_rep gs arr = gs |> List.map (fun g -> (Ghost.pos g,
    ghost_rep g)) |> List.iter (fun (p, s) -> edit_at_coord arr p s) *)
 
-let update_ghost_rep gs arr =
-  let old_positions = List.map (fun g -> find_rep arr (ghost_rep g)) gs in
-  let wanted_positions_and_rep =
-    List.map (fun g -> (Ghost.pos g, ghost_rep g)) gs
-  in
-  List.iter (fun coord -> edit_at_coord arr coord "") old_positions;
-  List.iter
-    (fun (coord, rep) -> edit_at_coord arr coord rep)
-    wanted_positions_and_rep
+let update_ghost_rep gs arr diff =
+  if diff = Normal then ()
+  else
+    let old_positions = List.map (fun g -> find_rep arr (ghost_rep g)) gs in
+    let wanted_positions_and_rep =
+      List.map (fun g -> (Ghost.pos g, ghost_rep g)) gs
+    in
+    let trail = if diff = Hard then "#" else "" in
+    List.iter (fun (x, y) -> edit_at_coord arr (x, y) trail) old_positions;
+    List.iter
+      (fun (coord, rep) -> edit_at_coord arr coord rep)
+      wanted_positions_and_rep
 
 let update_pac_rep pac arr =
   let old_position = find_rep arr "C" in
@@ -312,7 +315,7 @@ let update_pac_rep pac arr =
 
 let printable game =
   let arr = game.board in
-  update_ghost_rep game.ghosts arr;
+  update_ghost_rep game.ghosts arr game.difficulty;
   update_pac_rep game.pacman arr;
   arr
 
