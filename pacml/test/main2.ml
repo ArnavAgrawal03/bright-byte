@@ -28,7 +28,7 @@ let data_dir_prefix = "data" ^ Filename.dir_sep
 let easy = Board.csv_array (data_dir_prefix ^ "easy.csv")
 let medium = Board.csv_array (data_dir_prefix ^ "normal.csv")
 let hard = Board.csv_array (data_dir_prefix ^ "hard.csv")
-let test1 = Board.csv_array (data_dir_prefix ^ "testa.csv")
+let test4 = Board.csv_array (data_dir_prefix ^ "testa.csv")
 let test2 = Board.board_array (Board.csv_array (data_dir_prefix ^ "testb.csv"))
 let test3 = Board.board_array (Board.csv_array (data_dir_prefix ^ "test.csv"))
 
