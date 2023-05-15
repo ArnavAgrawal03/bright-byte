@@ -164,18 +164,16 @@ let logic_tests =
   [
     move_pac_test "Pac-Man starts at (1,1) and moves down to (1,2)" (1, 1) easy
       Down (1, 2);
-    move_pac_test
-      "Pac-Man starts at (1,1) and tries to move up but cannot so position \
-       stays at (1,1)"
-      (1, 1) easy Up (1, 1);
+    move_pac_test "Pac-Man starts at (1,1) and moves up to (2,1)" (1, 1) easy Up
+      (2, 1);
     move_pac_test "Pac-Man starts at (1,1) and moves right to (2,1)" (1, 1) easy
       Right (2, 1);
+    move_pac_test "Pac-Man starts at (1,1) and moves left to (2,1)" (1, 1) easy
+      Left (2, 1);
     move_pac_test
-      "Pac-Man starts at (1,1) and tries to move left but cannot so position \
-       stays at (1,1)"
-      (1, 1) easy Left (1, 1);
-    move_pac_test "Pac-Man starts at (2,2) and moves down to (2,3)" (2, 2) easy
-      Down (2, 3);
+      "Pac-Man starts at (2,2) and tries to move down cannot so position stays \
+       at (2,3) "
+      (2, 2) easy Down (2, 2);
     move_pac_test "Pac-Man starts at (2,2) and moves up to (2,1)" (2, 2) easy Up
       (2, 1);
     move_pac_test "Pac-Man starts at (4,1) and moves right to (5,1)" (4, 1) easy
