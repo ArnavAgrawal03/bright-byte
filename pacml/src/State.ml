@@ -283,7 +283,7 @@ let printable game =
 let blank () = Sys.command "clear" |> ignore
 let welcome_message = "Hello! Welcome to Pacman!"
 
-let print game =
+let print_game game =
   blank ();
   print_endline welcome_message;
   print_endline ("Current Lives " ^ string_of_int game.lives);
