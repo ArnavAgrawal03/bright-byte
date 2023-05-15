@@ -75,8 +75,8 @@ let deactivate g =
   switch_active g
 
 let switch_scatter g = { g with scatter = not g.scatter; scatter_frames = 0 }
-let scatter g = switch_scatter g
-let unscatter g = switch_scatter g
+let scatter g = { g with scatter = true; scatter_frames = 0 }
+let unscatter g = { g with scatter = false; scatter_frames = 0 }
 let l1_norm p = float_of_int (abs (fst p) + abs (snd p))
 let l2_norm p = sqrt (float_of_int ((fst p * fst p) + (snd p * snd p)))
 let point_op p1 p2 op = (op (fst p1) (fst p2), op (snd p1) (snd p2))
