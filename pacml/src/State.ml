@@ -203,3 +203,12 @@ let activate_if_right game g =
 let activate_gs game =
   let gs' = game.ghosts |> List.map (activate_if_right game) in
   { game with ghosts = gs' }
+
+let make_g_scatter diff g =
+  if Ghost.scatter_frames g >= max_scatter diff then Ghost.unscatter g else g
+
+let update_scatter_status game =
+  {
+    game with
+    ghosts = game.ghosts |> List.map (make_g_scatter game.difficulty);
+  }
