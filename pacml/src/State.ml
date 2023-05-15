@@ -214,7 +214,7 @@ let update_scatter_status game =
   }
 
 let update_state game =
-  match (Board.won board, game.lives) with
+  match (Board.won game.board, game.lives) with
   | true, _ -> { game with game_state = Won }
   | false, 0 -> { game with game_state = Lost }
   | false, _ -> game
