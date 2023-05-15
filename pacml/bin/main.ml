@@ -4,8 +4,6 @@ open Command
 exception Timeout
 exception Invalid_argument
 
-(* type t = | A of Csv.t | B of string *)
-
 let data_dir_prefix = "data" ^ Filename.dir_sep
 let clear () = ignore (Sys.command "clear")
 let frame_time = 3
@@ -27,31 +25,6 @@ let timeout f x max =
   let value = f x in
   ignore (Unix.alarm 0);
   value
-
-(**[join_list] is a helper function that concates the cells in the csv to the
-   set of the row in order to print the board*)
-(* let rec join_list = function | [] -> "" | [ s ] -> s | s :: tl -> if s <> ""
-   then s ^ " " ^ join_list tl else s ^ " " ^ join_list tl
-
-   (** [single_char] changes the terminal settings to allow parsing of a single
-   character. *)
-
-   let rec print_line = function | [] -> print_string " " | [ "/n" ] ->
-   print_string "\n" | "#" :: tl -> ANSITerminal.print_string [
-   ANSITerminal.blue ] "# "; print_line tl | "O" :: tl ->
-   ANSITerminal.print_string [ ANSITerminal.green ] "▫ "; print_line tl | "R" ::
-   tl -> ANSITerminal.print_string [ ANSITerminal.red ] "👻"; print_line tl | "B"
-   :: tl -> ANSITerminal.print_string [ ANSITerminal.cyan ] "👻"; print_line tl |
-   "P" :: tl -> ANSITerminal.print_string [ ANSITerminal.magenta ] "👻";
-   print_line tl | "Y" :: tl -> ANSITerminal.print_string [ ANSITerminal.white ]
-   "👻"; print_line tl | "C" :: tl -> ANSITerminal.print_string [
-   ANSITerminal.yellow ] "ᗧ "; print_line tl | "" :: tl -> print_string " ";
-   print_line tl | x -> print_string (join_list x) *)
-
-(** [print_board] prints the current board on the terminal*)
-(* let rec print_board (b : string list list) = match b with | [] ->
-   print_string "\n" | hd :: tl -> print_line hd; (*print_string "\n";*)
-   print_board tl *)
 
 let player_input () =
   single_char ();
