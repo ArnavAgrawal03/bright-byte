@@ -24,9 +24,13 @@ let command_dir_parse_test (name : string) (command : string)
     (expected_output : command) =
   name >:: fun _ -> assert_equal expected_output (parse command)
 
-let easy = Board.csv_array "easy.csv"
-let medium = Board.csv_array "medium.csv"
-let hard = Board.csv_array "hard.csv"
+let data_dir_prefix = "data" ^ Filename.dir_sep
+let easy = Board.csv_array (data_dir_prefix ^ "easy.csv")
+let medium = Board.csv_array (data_dir_prefix ^ "normal.csv")
+let hard = Board.csv_array (data_dir_prefix ^ "hard.csv")
+let test1 = Board.csv_array (data_dir_prefix ^ "testa.csv")
+let test2 = Board.board_array (Board.csv_array (data_dir_prefix ^ "testb.csv"))
+let test3 = Board.board_array (Board.csv_array (data_dir_prefix ^ "test.csv"))
 
 let is_border_test (name : string) (input1 : Board.t) (input2 : Board.position)
     (expected_output : bool) =
@@ -133,10 +137,6 @@ let board_tests =
     got_dot_test "got_dot (3,3) easy is true" (3, 3) easy true;
     got_big_dot_test "got_big_dot (4,4) easy is false" (4, 4) easy false;
   ]
-
-let test1 = Board.board_array (Board.csv_array "test_1.csv")
-let test2 = Board.board_array (Board.csv_array "test_2.csv")
-let test3 = Board.board_array (Board.csv_array "test_3.csv")
 
 let string_of_position position =
   match position with
