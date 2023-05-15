@@ -178,7 +178,7 @@ let step_aux g board dir is_blocked =
   match is_blocked step_target with
   | true -> g
   | false ->
-      let wrap_around a b = if b = 0 then a else (a + b) mod b in
+      let wrap_around a b = (a + b) mod length in
       let delta = (breadth, length) in
       let pos' = point_op delta step_target wrap_around in
       { g with pos = pos'; dir }
