@@ -24,7 +24,7 @@ let command_dir_parse_test (name : string) (command : string)
     (expected_output : command) =
   name >:: fun _ -> assert_equal expected_output (parse command)
 
-let easy = Board.csv_array "test_1.csv"
+let easy = Board.csv_array "easy.csv"
 let medium = Board.csv_array "medium.csv"
 let hard = Board.csv_array "hard.csv"
 
