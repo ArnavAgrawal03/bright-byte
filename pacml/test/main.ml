@@ -24,9 +24,10 @@ let command_dir_parse_test (name : string) (command : string)
     (expected_output : command) =
   name >:: fun _ -> assert_equal expected_output (parse command)
 
-let easy = Board.csv_array "easy.csv"
-let medium = Board.csv_array "medium.csv"
-let hard = Board.csv_array "hard.csv"
+let data_dir_prefix = "data" ^ Filename.dir_sep
+let easy = Board.csv_array (data_dir_prefix ^ "easy.csv")
+let medium = Board.csv_array (data_dir_prefix ^ "normal.csv")
+let hard = Board.csv_array (data_dir_prefix ^ "hard.csv")
 
 let is_border_test (name : string) (input1 : Board.t) (input2 : Board.position)
     (expected_output : bool) =
