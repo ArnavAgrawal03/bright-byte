@@ -80,21 +80,22 @@ let move_pos position (dir : Command.dir) =
   | Right -> helper_move_pos 1 0 position
   | Down -> helper_move_pos 0 1 position
 
-let char_display c =
+let str_display c =
   match c with
   | "R" -> "x"
   | "B" -> "x"
   | "Y" -> "x"
   | "P" -> "x"
-  | "C" -> "c"
-  | "O" -> "o"
+  | "C" -> " "
+  | "O" -> pac_dots
   | _ -> c
 
-let row_display row = Array.map char_display row
+let row_display row = Array.map str_display row
 let board_display t = Array.map row_display t
 
-let csv_array filename =
-  let board_arr = Csv.to_array (Csv.load filename) in
+let csv_array file =
+  let board_arr = Csv.to_array (Csv.load file) in
   Array.map
-    (Array.map (fun s -> if s = "" then " " else String.make 1 s.[0]))
+    (fun arr ->
+      Array.map (fun s -> if s = "" then "  " else String.make 1 s.[0]) arr)
     board_arr

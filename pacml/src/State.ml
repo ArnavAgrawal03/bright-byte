@@ -67,7 +67,7 @@ let setup_point board height width ghost_data pac exits =
   | "Y" -> ghost_data := (coordinates, Yellow) :: !ghost_data
   | "C" -> pac := Logic.pacman (height, width) Right (height, width)
   | "_" -> exits := coordinates :: !exits
-  | _ -> failwith "ABC"
+  | _ -> ()
 
 let start_game board level =
   let ghost_data = ref [] in
@@ -289,5 +289,5 @@ let print_game game =
   print_endline ("Current Lives " ^ string_of_int game.lives);
   print_endline ("Current Score " ^ string_of_int game.score);
   print_board (printable game);
-  print_endline "Use the arrow keys to move Pacman";
+  print_endline "Use the WASD keys to move Pacman";
   if game.paused then print_endline "Game Paused (p to resume)" else ()

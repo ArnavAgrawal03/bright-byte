@@ -8,7 +8,7 @@ exception Invalid_argument
 
 let data_dir_prefix = "data" ^ Filename.dir_sep
 let clear () = ignore (Sys.command "clear")
-let frame_time = 1
+let frame_time = 3
 let default_terminal = Unix.tcgetattr Unix.stdin
 
 let go_to_default_terminal () =
@@ -88,7 +88,7 @@ let change_ref_state ref_command ref_state command =
 let rec handle_playing_state (state : State.t ref) command =
   change_ref_state command state
     (try timeout player_input () frame_time with Timeout -> None);
-  State.print !state;
+  State.print_game !state;
   if State.get_game_state !state = Won then begin
     print_endline "Congratulations! You won the game!";
     state := State.update !state Quit
@@ -113,7 +113,7 @@ let playing_game file_name =
   let board = board_helper full_name in
   let state = ref (State.start_game board file_name) in
   let command = ref (Move Right) in
-  State.print !state;
+  State.print_game !state;
   handle_playing_state state command;
   print_endline "Thanks for playing! Press Enter to return to the main menu.";
   ignore (read_line ())
