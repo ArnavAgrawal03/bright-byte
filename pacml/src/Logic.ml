@@ -15,7 +15,11 @@ let move_pac_helper t board dir =
   let board_height = Array.length array_of_board in
   let board_length = Array.length array_of_board.(snd t.position) in
   let new_pos = Board.move_pos t.position dir in
-  if Board.is_border board new_pos then t
+  if
+    Board.is_border board new_pos
+    || Board.is_container board new_pos
+    || Board.is_container_exit board new_pos
+  then t
   else
     let pos_x = (fst new_pos + board_length) mod board_length in
     let pos_y = (snd new_pos + board_height) mod board_height in

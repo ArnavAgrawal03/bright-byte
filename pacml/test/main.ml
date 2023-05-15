@@ -68,12 +68,65 @@ let command_tests =
       (Move Up);
   ]
 
-let move_pac_test (name : string) (t : Logic.t) (board : Board.t)
-    (dir : Command.dir) (expected_output : Logic.t) =
-  name >:: fun _ -> assert_equal expected_output (move_pac t board dir)
+let test1 = Board.board_array (Board.csv_array "test_1.csv")
+let test2 = Board.board_array (Board.csv_array "test_2.csv")
+let test3 = Board.board_array (Board.csv_array "test_3.csv")
 
-let make_og_pos_test (name : string) (t : Logic.t) (expected_output : Logic.t) =
-  name >:: fun _ -> assert_equal expected_output (make_og_pos t)
+let string_of_position position =
+  match position with
+  | x, y -> "(" ^ string_of_int x ^ ", " ^ string_of_int y ^ ")"
 
-let suite = "Test suite for Pac-Man" >::: List.flatten [ command_tests ]
+let move_pac_test (name : string) (og_pos : Board.position) (board : Board.t)
+    (dir : Command.dir) expected_output =
+  name >:: fun _ ->
+  let pac = pacman og_pos Right og_pos in
+  assert_equal expected_output
+    (Logic.position (Logic.move_pac pac board dir))
+    ~printer:string_of_position
+
+let make_og_pos_test (name : string) (position : Board.position)
+    (og_pos : Board.position) expected_output =
+  name >:: fun _ ->
+  let pac = pacman position Right og_pos in
+  assert_equal expected_output
+    (Logic.position (make_og_pos pac))
+    ~printer:string_of_position
+
+let logic_tests =
+  [
+    move_pac_test "Pac-Man starts at (1,1) and moves down to (1,2)" (1, 1) test1
+      Down (1, 2);
+    move_pac_test
+      "Pac-Man starts at (1,1) and tries to move up but cannot so position \
+       stays at (1,1)"
+      (1, 1) test1 Up (1, 1);
+    move_pac_test "Pac-Man starts at (1,1) and moves right to (2,1)" (1, 1)
+      test1 Right (2, 1);
+    move_pac_test
+      "Pac-Man starts at (1,1) and tries to move left but cannot so position \
+       stays at (1,1)"
+      (1, 1) test1 Left (1, 1);
+    move_pac_test "Pac-Man starts at (2,2) and moves down to (2,3)" (2, 2) test2
+      Down (2, 3);
+    move_pac_test "Pac-Man starts at (2,2) and moves up to (2,1)" (2, 2) test2
+      Up (2, 1);
+    move_pac_test "Pac-Man starts at (4,1) and moves right to (5,1)" (4, 1)
+      test3 Right (5, 1);
+    move_pac_test "Pac-Man starts at (4,1) and moves right to (3,1)" (4, 1)
+      test3 Left (3, 1);
+    make_og_pos_test "Pac-Man starts at (0,0) and is currently at (6,8)" (6, 8)
+      (0, 0) (0, 0);
+    make_og_pos_test "Pac-Man starts at (-10,0) and is currently at (0,0)"
+      (0, 0) (-10, 0) (-10, 0);
+    make_og_pos_test
+      "Pac-Man starts at (-100,-2380) and is currently at (5023,3520)"
+      (5023, 3520) (-100, -2380) (-100, -2380);
+    make_og_pos_test
+      "Pac-Man starts at (-8, 3125) and is currently at (-123,-14532)"
+      (-8, 3125) (-123, -14532) (-123, -14532);
+  ]
+
+let suite =
+  "Test suite for Pac-Man" >::: List.flatten [ command_tests; logic_tests ]
+
 let _ = run_test_tt_main suite
