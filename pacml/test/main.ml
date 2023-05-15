@@ -1,15 +1,19 @@
 open OUnit2
 open Game
 open Command
-(* open Logic *)
-(* open State open Board *)
+open Logic
+(* open State open Board open Ghosts*)
 
-(** *)
-
-(* let dir_stiring d = match d with | Up -> "up" | Left -> "left" | Down ->
-   "down" | Right -> "right" *)
-(* let string_of_position position = match position with | x, y -> "(" ^
-   string_of_int x ^ ", " ^ string_of_int y ^ ")" *)
+(** The main file was tested manually in the terminal in order to check if
+    everything was printing and displaying correctly. The rest of the
+    functionality was automatically testing by OUnit. For this testing suite, we
+    used a glass box strategy. This was because we wanted to find the edge cases
+    inside the methods in order to see if they were implemented correctly. By
+    combining these two approaches, we have covered both the internal and
+    external logic used by the game. The manual testing will check has covered
+    both the game's overall functionality and display features, while the OUnit
+    testing tests the individual methods. As a result, we have demonstrated
+    correctness of the code.*)
 
 let command_parse_test (name : string) (command : string)
     (expected_output : command) =
@@ -63,6 +67,13 @@ let command_tests =
       "Parses the key ' W      ' as the command move up correctly" " W      "
       (Move Up);
   ]
+
+let move_pac_test (name : string) (t : Logic.t) (board : Board.t)
+    (dir : Command.dir) (expected_output : Logic.t) =
+  name >:: fun _ -> assert_equal expected_output (move_pac t board dir)
+
+let make_og_pos_test (name : string) (t : Logic.t) (expected_output : Logic.t) =
+  name >:: fun _ -> assert_equal expected_output (make_og_pos t)
 
 let suite = "Test suite for Pac-Man" >::: List.flatten [ command_tests ]
 let _ = run_test_tt_main suite

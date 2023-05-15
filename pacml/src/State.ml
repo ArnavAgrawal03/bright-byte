@@ -10,9 +10,9 @@ type difficulty =
   | Normal
   | Hard
 
-let orb_value : int = 10
-let big_orb_value : int = 50
-let ghost_value : int = 200
+let meal_value : int = 10
+let big_meal_value : int = 50
+let eat_g_value : int = 200
 
 let difficulty_of_string (str : string) : difficulty =
   match String.lowercase_ascii (String.trim str) with
@@ -27,7 +27,7 @@ let active_fraction (difficulty : difficulty) : float =
   | Normal -> 1. /. 6.
   | Hard -> 1. /. 8.
 
-let scatter_frames (difficulty : difficulty) : int =
+let max_scatter (difficulty : difficulty) : int =
   match difficulty with
   | Easy -> 20
   | Normal -> 10
@@ -147,8 +147,59 @@ let reset_ghosts pac ghosts = ghosts |> List.map (reset_single_g pac)
 
 let eat_g_score pac g =
   if (Ghost.is_scatter g && Ghost.pos g = Logic.position pac) || through pac g
-  then ghost_value
+  then eat_g_value
   else 0
 
 let eat_gs_score pac gs =
   gs |> List.map (eat_g_score pac) |> List.fold_left ( + ) 0
+
+let process_cols game =
+  if collide_with_any game.pacman game.ghosts then eaten game
+  else
+    let gs' = reset_ghosts game.pacman game.ghosts in
+    let score' = game.score + eat_gs_score game.pacman game.ghosts in
+    { game with ghosts = gs'; score = score' }
+
+let eat_big_meal game =
+  {
+    game with
+    ghosts = List.map Ghost.scatter (List.map Ghost.rev game.ghosts);
+    score = big_meal_value + game.score;
+    board = Board.update_empty_dot (Logic.position game.pacman) game.board;
+  }
+
+let eat_meal game =
+  {
+    game with
+    score = meal_value + game.score;
+    board = Board.update_empty_dot (Logic.position game.pacman) game.board;
+  }
+
+let process_meals game =
+  if Board.got_big_dot (Logic.position game.pacman) game.board then
+    eat_big_meal game
+  else if Board.got_dot (Logic.position game.pacman) game.board then
+    eat_meal game
+  else game
+
+let remaining_meals_rat game =
+  let meals_left = Board.num_dots_left game.board in
+  float_of_int meals_left /. float_of_int game.max_orbs
+
+let diff_factor game fct = 1. -. (fct *. active_fraction game.difficulty)
+
+let should_activate game fct =
+  let remaining_meals = remaining_meals_rat game in
+  let diff_factor = diff_factor game fct in
+  remaining_meals < diff_factor
+
+let activate_if_right game g =
+  match Ghost.color g with
+  | Red -> Ghost.activate g
+  | Blue -> if should_activate game 1. then Ghost.activate g else g
+  | Pink -> if should_activate game 2. then Ghost.activate g else g
+  | Yellow -> if should_activate game 3. then Ghost.activate g else g
+
+let activate_gs game =
+  let gs' = game.ghosts |> List.map (activate_if_right game) in
+  { game with ghosts = gs' }
