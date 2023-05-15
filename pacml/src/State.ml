@@ -212,3 +212,38 @@ let update_scatter_status game =
     game with
     ghosts = game.ghosts |> List.map (make_g_scatter game.difficulty);
   }
+
+let update_state game =
+  match (Board.won game.board, game.lives) with
+  | true, _ -> { game with game_state = Won }
+  | false, 0 -> { game with game_state = Lost }
+  | false, _ -> game
+
+let moved_update game dir =
+  game |> move_pac dir |> move_ghosts |> update_scatter_frames |> process_cols
+  |> process_meals |> activate_gs |> update_scatter_status |> update_state
+
+let update game input =
+  match (game.paused, input) with
+  | _, Command.Quit -> { game with quit_game = true }
+  | true, Pause -> { game with paused = false }
+  | true, _ -> game
+  | false, Pause -> { game with paused = true }
+  | false, Move dir -> moved_update game dir
+  | false, Error s -> failwith s
+
+let init_state board pac gs lives score paused quit_game game_state exits
+    max_orbs difficulty =
+  {
+    board;
+    pacman = pac;
+    ghosts = gs;
+    lives;
+    score;
+    paused;
+    quit_game;
+    game_state;
+    exits;
+    max_orbs;
+    difficulty;
+  }
