@@ -1,5 +1,5 @@
 type t
-(** [t] is the type used to store the current game state information*)
+(** [t] is the type sued to store the current game state information*)
 
 type current_game =
   | Won
