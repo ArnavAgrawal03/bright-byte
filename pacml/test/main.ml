@@ -213,6 +213,99 @@ let logic_tests =
       (-8, 3125) (-123, -14533) (-123, -14533);
   ]
 
+let test_init () =
+  let expected_pos = (1, 2) in
+  (* expected position *)
+  let expected_color = Ghost.Red in
+  (* expected color *)
+  let expected_dir = Command.Up in
+  (* expected direction *)
+  let expected_active = true in
+  (* expected active status *)
+  let open Ghost in
+  let ghost = init expected_pos expected_color expected_dir expected_active in
+  assert_equal expected_pos (pos ghost);
+  assert_equal expected_color (color ghost);
+  assert_equal expected_dir (dir ghost);
+  assert_equal expected_active (is_active ghost)
+
+(* Define test cases for the 'inits' function *)
+let test_inits () =
+  let expected_pos1 = (1, 2) (* expected position 1 *) in
+  let expected_color1 = Ghost.Red (* expected color 1 *) in
+  let expected_pos2 = (3, 4) (* expected position 2 *) in
+  let expected_color2 = Ghost.Blue (* expected color 2 *) in
+  let open Ghost in
+  let ghost_list =
+    inits [ (expected_pos1, expected_color1); (expected_pos2, expected_color2) ]
+  in
+  assert_equal expected_pos1 (pos (List.nth ghost_list 0));
+  assert_equal expected_color1 (color (List.nth ghost_list 0));
+  assert_equal expected_pos2 (pos (List.nth ghost_list 1));
+  assert_equal expected_color2 (color (List.nth ghost_list 1))
+
+(* Define test cases for the 'pos' function *)
+let test_pos () =
+  (* Create test inputs *)
+  let ghost = Ghost.init (1, 2) Ghost.Red Command.Up true in
+  (* create a ghost with a specific position *)
+  let expected_position = (1, 2) in
+
+  (* expected position *)
+
+  (* Perform the test *)
+  assert_equal expected_position (Ghost.pos ghost)
+
+(* Define test cases for the 'color' function *)
+let test_color () =
+  (* Create test inputs *)
+  let ghost =
+    Ghost.init (1, 2) Red Command.Up
+      true (* create a ghost with a specific color *)
+  in
+  let expected_color = Ghost.Red (* expected color *) in
+
+  (* Perform the test *)
+  assert_equal expected_color (Ghost.color ghost)
+
+(* Define test cases for the 'dir' function *)
+let test_dir () =
+  let open Ghost in
+  (* Create test inputs *)
+  let ghost =
+    init (1, 2) Red Command.Right
+      true (* create a ghost with a specific direction *)
+  in
+  let expected_direction = Command.Right (* expected direction *) in
+
+  (* Perform the test *)
+  assert_equal expected_direction (dir ghost)
+
+(* Define test cases for the 'is_active' function *)
+let test_is_active () =
+  let open Ghost in
+  (* Create test inputs *)
+  let ghost_active =
+    init (1, 2) Red Command.Up true (* create an active ghost *)
+  in
+  let ghost_inactive =
+    init (3, 4) Blue Command.Down false (* create an inactive ghost *)
+  in
+
+  (* Perform the test *)
+  assert_equal true (is_active ghost_active);
+  assert_equal false (is_active ghost_inactive)
+
+let _ =
+  [
+    test_color ();
+    test_dir ();
+    test_init ();
+    test_inits ();
+    test_is_active ();
+    test_pos ();
+  ]
+
 let suite =
   "Test suite for Pac-Man"
   >::: List.flatten [ command_tests; logic_tests; board_tests ]
